@@ -1,4 +1,5 @@
-list(APPEND raffinamento_test_headers ${CMAKE_CURRENT_SOURCE_DIR}/test_empty.hpp)
+list(APPEND raffinamento_test_headers ${CMAKE_CURRENT_SOURCE_DIR}/test_Triangle_class.hpp)
+list(APPEND raffinamento_test_headers ${CMAKE_CURRENT_SOURCE_DIR}/test_TriangularMesh_class.hpp)
 
 list(APPEND raffinamento_test_includes ${CMAKE_CURRENT_SOURCE_DIR})
 

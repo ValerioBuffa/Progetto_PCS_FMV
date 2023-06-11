@@ -1,4 +1,5 @@
-#include "test_empty.hpp"
+#include "test_Triangle_class.hpp"
+#include "test_TriangularMesh_class.hpp"
 
 #include <gtest/gtest.h>
 

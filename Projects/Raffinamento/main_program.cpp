@@ -1,4 +1,5 @@
-#include "empty_class.hpp"
+#include "Triangle_class.hpp"
+#include "TriangularMesh_class.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -13,6 +14,6 @@ int main(int argc, char* argv[])
 
         mesh.Show();
     } catch (const std::exception& e){
-        return -1;
+            return -1;
     }
 }
