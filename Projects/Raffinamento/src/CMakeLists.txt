@@ -3,6 +3,7 @@ list(APPEND raffinamento_headers ${CMAKE_CURRENT_SOURCE_DIR}/TriangularMesh_clas
 
 list(APPEND raffinamento_sources ${CMAKE_CURRENT_SOURCE_DIR}/Triangle_class.cpp)
 list(APPEND raffinamento_sources ${CMAKE_CURRENT_SOURCE_DIR}/TriangularMesh_class.cpp)
+list(APPEND raffinamento_headers ${CMAKE_CURRENT_SOURCE_DIR}/RefineMesh.cpp)
 
 list(APPEND raffinamento_includes ${CMAKE_CURRENT_SOURCE_DIR})
 
