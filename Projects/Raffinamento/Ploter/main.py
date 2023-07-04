@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import pandas as pd
+import numpy as np
 
 
 
@@ -15,8 +17,16 @@ class Cell1Ds:
     def __init__(self, id, marker, origin, end):
         self.id = int(id)
         self.marker = int(marker)
-        self.origin = origin
-        self.end = end
+        self.origin = int(origin)
+        self.end = int(end)
+
+
+class Cell2Ds:
+    def __init__(self, id, marker, vertices, edges):
+        self.id = int(id)
+        self.marker = int(marker)
+        self.vertices = np.array(vertices, dtype=int)
+        self.edges = np.array(edges, dtype=int)
 
 
 def importCell0Ds(file_path):
@@ -59,6 +69,55 @@ def importCell1Ds(file_path):
         return None                               # Restituisci None per segnalare un fallimento nell'importazione dei dati
 
 
+def importCell2Ds(file_path):
+    try:
+        dt = pd.read_csv(file_path, skiprows=1, delimiter=' ', header=None)
+        df = pd.DataFrame()
+        for index, row in dt.iterrows():
+            if len(row) == 8:
+                new_row = pd.DataFrame({
+                    'id': row[0],
+                    'marker': row[1],
+                    'v1': row[2],
+                    'v2': row[3],
+                    'v3': row[4],
+                    'e1': row[5],
+                    'e2': row[6],
+                    'e3': row[7]
+                }, index=[index])
+                flag=0
+            elif len(row) == 7:
+                new_row = pd.DataFrame({
+                    'id': row[0],
+                    'v1': row[1],
+                    'v2': row[2],
+                    'v3': row[3],
+                    'e1': row[4],
+                    'e2': row[5],
+                    'e3': row[6]
+                }, index=[index])
+                flag = 1
+            else:
+                print("Formato file non valido")
+            df = pd.concat([df, new_row])
+        Cella = []
+        for index, row in df.iterrows():
+            id = row['id']
+            if flag == 1:
+                marker = 0
+            else:
+                marker = row['marker']
+            vertices = row[['v1', 'v2', 'v3']]
+            edges = row[['e1', 'e2', 'e3']]
+            dati = Cell2Ds(id, marker, vertices, edges)
+            Cella.append(dati)
+        return Cella
+    except FileNotFoundError:
+        print(f"File '{file_path}' not found")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
 def showCell0Ds(cells):
     print("Cell0Ds:")
     for cell in cells:                            # Itera su ogni oggetto Cell0Ds nella lista cells
@@ -70,6 +129,17 @@ def showCell1Ds(cells):
     for cell in cells:                            # Itera su ogni oggetto Cell1Ds nella lista cells
         print(f"ID: {cell.id}, Marker: {cell.marker}, Origin: {cell.origin}, End: {cell.end}")
 
+
+def showCell2Ds(cells):
+    print("Cell2Ds:")
+    for cell in cells:                            # Itera su ogni oggetto Cell1Ds nella lista cells
+        print(f"ID: {cell.id}, Marker: {cell.marker}, Vertices: {cell.vertices}, Edges: {cell.edges}")
+
+
+def showCells(cell0ds, cell1ds, cell2ds):
+    showCell0Ds(cell0ds)
+    showCell1Ds(cell1ds)
+    showCell2Ds(cell2ds)
 
 def plotCell0Ds(cell0ds):
     x_values = [cell.x for cell in cell0ds]       # Crea una lista di valori X prendendo il valore X da ogni oggetto Cell0Ds nella lista cells
@@ -104,13 +174,11 @@ def plotCell0Ds(cell0ds):
     plt.legend(handles=legend_elements, title='Marker', bbox_to_anchor=(1.05, 1), loc='upper left')
 
     plt.axis('equal')                             # Imposta gli assi in modo che abbiano la stessa scala
-    plt.show()                                    # Mostra il grafico
 
 
 def plotCell1Ds(cell0ds, cell1ds):
     x_values = [cell.x for cell in cell0ds]       # Crea una lista di valori X prendendo il valore X da ogni oggetto Cell0Ds nella lista cell0ds
     y_values = [cell.y for cell in cell0ds]       # Crea una lista di valori Y prendendo il valore Y da ogni oggetto Cell0Ds nella lista cell0ds
-    colors = [cell.marker for cell in cell0ds]    # Crea una lista di colori prendendo il valore del marker da ogni oggetto Cell0Ds nella lista cell0ds
 
     # Mappa di colori per associare ciascun valore del marker a un colore specifico
     color_map = {5: 'red', 6: 'green', 7: 'orange', 8: 'yellow', 0: 'blue'}
@@ -156,21 +224,91 @@ def plotCell1Ds(cell0ds, cell1ds):
     plt.legend(handles=legend_elements, title='Marker', bbox_to_anchor=(1.05, 1), loc='upper left')
 
     plt.axis('equal')                             # Imposta gli assi in modo che abbiano la stessa scala
-    plt.show()                                    # Mostra il grafico
+
+
+def plotCell2Ds(cell0ds, cell1ds, cell2ds):
+    x_values = [cell.x for cell in cell0ds]
+    y_values = [cell.y for cell in cell0ds]
+
+    max_marker = max(cell2ds, key=lambda cell: cell.marker).marker
+    gradient_values = np.linspace(0, 1, max_marker + 1)
+
+    cmap = mcolors.LinearSegmentedColormap.from_list('my_cmap', ['white', 'darkgray'], N=max_marker+1)
+
+    color_map = {marker: cmap(gradient_values[marker]) for marker in range(max_marker + 1)}
+    legend_elements = [
+        plt.Line2D([0], [0], marker='o', color='w', label=str(marker),
+                   markerfacecolor=color_map[marker], markersize=10)
+        for marker in color_map
+    ]
+
+    for cell in cell1ds:
+        origin_id = cell.origin
+        end_id = cell.end
+
+        origin = None
+        for cell0d in cell0ds:
+            if cell0d.id == origin_id:
+                origin = cell0d
+                break
+
+        end = None
+        for cell0d in cell0ds:
+            if cell0d.id == end_id:
+                end = cell0d
+                break
+
+        plt.plot([origin.x, end.x], [origin.y, end.y], color='black', linewidth=1)
+
+    for cell in cell2ds:
+        vertices_ids = cell.vertices
+        marker = cell.marker
+
+        vertices = []
+        for vertex_id in vertices_ids:
+            for cell0d in cell0ds:
+                if cell0d.id == vertex_id:
+                    vertices.append(cell0d)
+                    break
+
+        x_coords = [vertex.x for vertex in vertices]
+        y_coords = [vertex.y for vertex in vertices]
+
+        plt.fill(x_coords, y_coords, color=color_map[marker], alpha=0.5)
+
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.title('Cell2Ds Plot')
+    plt.legend(handles=legend_elements, title='Marker', bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.axis('equal')
+
+
+def plot(cell0ds, cell1ds, cell2ds):
+    plt.figure(figsize=(12, 4))
+
+    plt.subplot(1, 3, 1)
+    plotCell0Ds(cell0ds)
+
+    plt.subplot(1, 3, 2)
+    plotCell1Ds(cell0ds, cell1ds)
+
+    plt.subplot(1, 3, 3)
+    plotCell2Ds(cell0ds, cell1ds, cell2ds)
+
+    plt.tight_layout()
+    plt.show()
 
 
 
 
 
-file_path0 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Test1\\Cell0Ds.csv"
-file_path1 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Test1\\Cell1Ds.csv"
+file_path0 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Ploter\\PollterDataTest\\Cell0Ds.csv"
+file_path1 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Ploter\\PollterDataTest\\Cell1Ds.csv"
+file_path2 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Ploter\\PollterDataTest\\Cell2Ds.csv"
 Cella0 = importCell0Ds(file_path0)
 Cella1 = importCell1Ds(file_path1)
+Cella2 = importCell2Ds(file_path2)
 
-if Cella0 is not None:
-    showCell0Ds(Cella0)
-if Cella1 is not None:
-    showCell1Ds(Cella1)
+showCells(Cella0, Cella1, Cella2)
 
-plotCell0Ds(Cella0)
-plotCell1Ds(Cella0, Cella1)
+plot(Cella0, Cella1, Cella2)
