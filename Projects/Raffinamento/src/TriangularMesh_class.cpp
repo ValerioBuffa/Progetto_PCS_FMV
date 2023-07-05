@@ -268,5 +268,101 @@ vector<unsigned int> TriangularMesh::GetAdjacentTriangles(unsigned int edgeId)
 }
 
 
+void PrintToCSV0(const string& filePathOut0, TriMeshStruct &triMeshData)
+{
+    try
+    {
+        ofstream file(filePathOut0, ofstream::trunc);
+        if (!file.is_open())
+            throw runtime_error("Failed to open file: " + filePathOut0);
+
+        file << "Id Marker X Y" << "\n";
+        for(const unsigned int &id : triMeshData.cell0DIDs)
+        {
+            file << id << " "
+                 << triMeshData.cell0DMks[id] << " "
+                 << triMeshData.cell0DCoords[id][0] << " "
+                 << triMeshData.cell0DCoords[id][1] << "\n";
+        }
+
+        file.close();
+    }
+    catch (const std::exception& e)
+    {
+        cerr << "Error writing to CSV file: " << e.what() << endl;
+        throw;
+   }
+}
+
+
+void PrintToCSV1(const string& filePathOut1, TriMeshStruct &triMeshData)
+{
+    try
+    {
+        ofstream file(filePathOut1, ofstream::trunc);
+        if (!file.is_open())
+            throw runtime_error("Failed to open file: " + filePathOut1);
+
+        file << "Id Marker Origin End" << "\n";
+        for(const unsigned int &id : triMeshData.cell1DIDs)
+        {
+            file << id << " "
+                 << triMeshData.cell1DMks[id] << " "
+                 << triMeshData.cell1DVerts[id][0] << " "
+                 << triMeshData.cell1DVerts[id][1] << "\n";
+        }
+
+        file.close();
+    }
+    catch (const std::exception& e)
+    {
+        cerr << "Error writing to CSV file: " << e.what() << endl;
+        throw;
+   }
+}
+
+
+void PrintToCSV2(const string& filePathOut2, TriMeshStruct &triMeshData)
+{
+    try
+    {
+        ofstream file(filePathOut2, ofstream::trunc);
+        if (!file.is_open())
+            throw runtime_error("Failed to open file: " + filePathOut2);
+
+        file << "Id Marker Vertices Edges" << "\n";
+        for(const unsigned int &id : triMeshData.cell2DIDs)
+        {
+            file << id << " "
+                 << triMeshData.cell2DMks[id];
+            for(unsigned int i = 0; i < 3; i++)
+            {
+                file << " " << triMeshData.cell2DVerts[id][i] ;
+            }
+            for(unsigned int i = 0; i < 3; i++)
+            {
+                file << " " << triMeshData.cell2DEdges[id][i];
+            }
+            file << "\n";
+        }
+
+        file.close();
+    }
+    catch (const std::exception& e)
+    {
+        cerr << "Error writing to CSV file: " << e.what() << endl;
+        throw;
+   }
+}
+
+
+void TriangularMesh::PrintToCSV(const string& filePath0, const string& filePath1, const string& filePath2)
+{
+    PrintToCSV0(filePath0, triMeshData);
+    PrintToCSV1(filePath1, triMeshData);
+    PrintToCSV2(filePath2, triMeshData);
+}
+
+
 
 }

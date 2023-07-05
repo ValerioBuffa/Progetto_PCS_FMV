@@ -34,11 +34,13 @@ class TriangularMesh
     public:
         TriMeshStruct triMeshData;
 
-        TriangularMesh(const string &filePath0D, const string &filePath1D, const string &filePath2D);
+        TriangularMesh(const string& filePath0D, const string& filePath1D, const string& filePath2D);
 
         void Show();
 
         vector<unsigned int> GetAdjacentTriangles(unsigned int edgeId);
+
+        void PrintToCSV(const string& filePath0, const string& filePath1, const string& filePath2);
 };
 
 
@@ -46,6 +48,12 @@ class TriangularMesh
 bool operator == (const TriMeshStruct &obj1, const TriMeshStruct &obj2);
 
 void fillTriMeshStruct(TriMeshStruct &triMeshData, unordered_map<unsigned int, vector<unsigned int>> &adjacentTriangles , const string &filePath0D, const string &filePath1D, const string &filePath2D);
+
+void PrintToCSV0(const string& filePathOut0, TriMeshStruct &triMeshData);
+
+void PrintToCSV1(const string& filePathOut1, TriMeshStruct &triMeshData);
+
+void PrintToCSV2(const string& filePathOut2, TriMeshStruct &triMeshData);
 
 }
 
