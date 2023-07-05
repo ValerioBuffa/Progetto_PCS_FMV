@@ -141,7 +141,7 @@ def showCells(cell0ds, cell1ds, cell2ds):
     showCell1Ds(cell1ds)
     showCell2Ds(cell2ds)
 
-def plotCell0Ds(cell0ds):
+def plotCell0Ds(cell0ds, cell1ds):
     x_values = [cell.x for cell in cell0ds]       # Crea una lista di valori X prendendo il valore X da ogni oggetto Cell0Ds nella lista cells
     y_values = [cell.y for cell in cell0ds]       # Crea una lista di valori Y prendendo il valore Y da ogni oggetto Cell0Ds nella lista cells
     colors = [cell.marker for cell in cell0ds]    # Crea una lista di colori prendendo il valore del marker da ogni oggetto Cell0Ds nella lista cells
@@ -159,11 +159,25 @@ def plotCell0Ds(cell0ds):
     # Ottieni il colore corrispondente al valore del marker della Cell0Ds corrente
     marker_colors = [color_map.get(marker, 'black') for marker in colors]
     # Disegna un grafico a dispersione dei punti con colori basati sui marker
-    plt.scatter(x_values, y_values, c=marker_colors)
+    plt.scatter(x_values, y_values, c=marker_colors, marker='s', s=10)
 
-    # Assegna ai punti del grafico il valore d'id associato
-    for i, id in enumerate(ids):                  # Annota ogni punto con il relativo ID
-        plt.annotate(str(id), (x_values[i], y_values[i]), textcoords="offset points", xytext=(0,10), ha='center')
+    for cell in cell1ds:
+        origin_id = cell.origin
+        end_id = cell.end
+
+        origin = None
+        for cell0d in cell0ds:
+            if cell0d.id == origin_id:
+                origin = cell0d
+                break
+
+        end = None
+        for cell0d in cell0ds:
+            if cell0d.id == end_id:
+                end = cell0d
+                break
+
+        plt.plot([origin.x, end.x], [origin.y, end.y], color='lightgray', linewidth=1)
 
     # Etichette degli assi e titolo del grafico
     plt.xlabel('X')
@@ -287,7 +301,7 @@ def plot(cell0ds, cell1ds, cell2ds):
     plt.figure(figsize=(12, 4))
 
     plt.subplot(1, 3, 1)
-    plotCell0Ds(cell0ds)
+    plotCell0Ds(cell0ds, cell1ds)
 
     plt.subplot(1, 3, 2)
     plotCell1Ds(cell0ds, cell1ds)
@@ -300,15 +314,49 @@ def plot(cell0ds, cell1ds, cell2ds):
 
 
 
+def Vplot(cell0ds_in, cell1ds_in, cell2ds_in, cell0ds_out, cell1ds_out, cell2ds_out):
+    plt.figure(figsize=(12, 8))
+
+    plt.subplot(2, 3, 1)
+    plotCell0Ds(cell0ds_in, cell1ds_in)
+
+    plt.subplot(2, 3, 2)
+    plotCell1Ds(cell0ds_in, cell1ds_in)
+
+    plt.subplot(2, 3, 3)
+    plotCell2Ds(cell0ds_in, cell1ds_in, cell2ds_in)
+
+    plt.subplot(2, 3, 4)
+    plotCell0Ds(cell0ds_out, cell1ds_out)
+
+    plt.subplot(2, 3, 5)
+    plotCell1Ds(cell0ds_out, cell1ds_out)
+
+    plt.subplot(2, 3, 6)
+    plotCell2Ds(cell0ds_out, cell1ds_out, cell2ds_out)
+
+    plt.tight_layout()
+    plt.show()
 
 
-file_path0 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Ploter\\PollterDataTest\\Cell0Ds.csv"
-file_path1 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Ploter\\PollterDataTest\\Cell1Ds.csv"
-file_path2 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Ploter\\PollterDataTest\\Cell2Ds.csv"
-Cella0 = importCell0Ds(file_path0)
-Cella1 = importCell1Ds(file_path1)
-Cella2 = importCell2Ds(file_path2)
+
+
+file_IN_path0 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Test1\\Cell0Ds.csv"
+file_IN_path1 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Test1\\Cell1Ds.csv"
+file_IN_path2 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Test1\\Cell2Ds.csv"
+Cella0_IN = importCell0Ds(file_IN_path0)
+Cella1_IN = importCell1Ds(file_IN_path1)
+Cella2_IN = importCell2Ds(file_IN_path2)
+
+file_OUT_path0 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell0Ds.csv"
+file_OUT_path1 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell1Ds.csv"
+file_OUT_path2 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell2Ds.csv"
+Cella0_OUT = importCell0Ds(file_OUT_path0)
+Cella1_OUT = importCell1Ds(file_OUT_path1)
+Cella2_OUT = importCell2Ds(file_OUT_path2)
 
 #showCells(Cella0, Cella1, Cella2)
 
-plot(Cella0, Cella1, Cella2)
+Vplot(Cella0_IN, Cella1_IN, Cella2_IN, Cella0_OUT, Cella1_OUT, Cella2_OUT)
+#plot(Cella0_IN, Cella1_IN, Cella2_IN)
+#plot(Cella0_OUT, Cella1_OUT, Cella2_OUT)
