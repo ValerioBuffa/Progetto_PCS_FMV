@@ -1,48 +1,51 @@
 #ifndef TriangularMesh_H
 #define TriangularMesh_H
 
-#include "Triangle_class.hpp"
 #include <iostream>
 #include <Eigen/Eigen>
+#include <unordered_map>
+
+using namespace std;
+using namespace Eigen;
 
 namespace ProjectLibrary
 {
-    class Triangle; // Dichiarazione forward di Triangle
 
-    struct TriMeshStruct
-    {
-        std::vector<unsigned int> cell0DIDs;
-        std::vector<Eigen::Vector2d> cell0DCoords;
-        std::map<unsigned int, std::list<unsigned int>> cell0DMks;
+struct TriMeshStruct
+{
+    vector<unsigned int> cell0DIDs;
+    vector<Vector2d> cell0DCoords;
+    vector<unsigned int> cell0DMks;
 
-        std::vector<unsigned int> cell1DIDs;
-        std::vector<Eigen::Vector2i> cell1DVerts;
-        std::map<unsigned int, std::list<unsigned int>> cell1DMks;
+    vector<unsigned int> cell1DIDs;
+    vector<Vector2i> cell1DVerts;
+    vector<unsigned int> cell1DMks;
 
-        std::vector<unsigned int> cell2DIDs;
-        std::vector<std::array<unsigned int, 3>> cell2DVerts;
-        std::vector<std::array<unsigned int, 3>> cell2DEdges;
-    };
+    vector<unsigned int> cell2DIDs;
+    vector<array<unsigned int, 3>> cell2DVerts;
+    vector<array<unsigned int, 3>> cell2DEdges;
+    vector<unsigned int> cell2DMks;
+};
 
-    class TriangularMesh
-    {
-        private:
+class TriangularMesh
+{
+    private:        
+        unordered_map<unsigned int, vector<unsigned int>> adjacentTriangles;
+    public:
+        TriMeshStruct triMeshData;
 
-        public:
-            TriMeshStruct triMeshData;
+        TriangularMesh(const string &filePath0D, const string &filePath1D, const string &filePath2D);
 
-            TriangularMesh(const std::string &filePath0D, const std::string &filePath1D, const std::string &filePath2D);
+        void Show();
 
-            void Show();
-    };
-
+        vector<unsigned int> GetAdjacentTriangles(unsigned int edgeId);
+};
 
 
-    void fillTriMeshStruct(TriMeshStruct &triMeshData, const std::string &filePath0D, const std::string &filePath1D, const std::string &filePath2D);
 
-    bool operator == (const TriMeshStruct &obj1, const TriMeshStruct &obj2);
+bool operator == (const TriMeshStruct &obj1, const TriMeshStruct &obj2);
 
-    void genTris(std::list<Triangle> &triList, TriangularMesh &triMesh);
+void fillTriMeshStruct(TriMeshStruct &triMeshData, unordered_map<unsigned int, vector<unsigned int>> &adjacentTriangles , const string &filePath0D, const string &filePath1D, const string &filePath2D);
 
 }
 
