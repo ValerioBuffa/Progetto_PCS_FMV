@@ -2,37 +2,38 @@
 #define test_TriangularMesh_class_H
 
 #include <gtest/gtest.h>
-#include "Triangle_class.hpp"
 #include "TriangularMesh_class.hpp"
+#include "Triangle_class.hpp"
+#include "TriangleVector_class.hpp"
 
 using namespace testing;
+using namespace Eigen;
+using namespace ProjectLibrary;
 
 TEST(InitTest, InitTriMeshStructTest)
 {
-    ProjectLibrary::TriMeshStruct triMeshData;
+    TriMeshStruct triMeshData;
 
     triMeshData.cell0DIDs = {0, 1, 2, 3};
 
-    triMeshData.cell0DCoords.push_back(Eigen::Vector2d(0.0, 0.0));
-    triMeshData.cell0DCoords.push_back(Eigen::Vector2d(1.0, 0.0));
-    triMeshData.cell0DCoords.push_back(Eigen::Vector2d(1.0, 1.0));
-    triMeshData.cell0DCoords.push_back(Eigen::Vector2d(0.0, 1.0));
+    triMeshData.cell0DCoords.push_back(Vector2d(0.0, 0.0));
+    triMeshData.cell0DCoords.push_back(Vector2d(1.0, 0.0));
+    triMeshData.cell0DCoords.push_back(Vector2d(1.0, 1.0));
+    triMeshData.cell0DCoords.push_back(Vector2d(0.0, 1.0));
 
-    triMeshData.cell0DMks[1] = {0};
-    triMeshData.cell0DMks[2] = {1};
-    triMeshData.cell0DMks[3] = {2, 3};
+    triMeshData.cell0DMks = {1, 2, 3, 3};
+
 
     triMeshData.cell1DIDs = {0, 1, 2, 3, 4};
 
-    triMeshData.cell1DVerts.push_back(Eigen::Vector2i(0, 1));
-    triMeshData.cell1DVerts.push_back(Eigen::Vector2i(1, 2));
-    triMeshData.cell1DVerts.push_back(Eigen::Vector2i(0, 2));
-    triMeshData.cell1DVerts.push_back(Eigen::Vector2i(2, 3));
-    triMeshData.cell1DVerts.push_back(Eigen::Vector2i(0, 3));
+    triMeshData.cell1DVerts.push_back(Vector2i(0, 1));
+    triMeshData.cell1DVerts.push_back(Vector2i(1, 2));
+    triMeshData.cell1DVerts.push_back(Vector2i(0, 2));
+    triMeshData.cell1DVerts.push_back(Vector2i(2, 3));
+    triMeshData.cell1DVerts.push_back(Vector2i(0, 3));
 
-    triMeshData.cell1DMks[1] = {0, 1};
-    triMeshData.cell1DMks[2] = {2};
-    triMeshData.cell1DMks[3] = {3, 4};
+    triMeshData.cell1DMks = {1, 1, 2, 3, 3};
+
 
     triMeshData.cell2DIDs = {0, 1};
 
@@ -42,33 +43,56 @@ TEST(InitTest, InitTriMeshStructTest)
     triMeshData.cell2DEdges.push_back({0, 1, 2});
     triMeshData.cell2DEdges.push_back({2, 3, 4});
 
-    ProjectLibrary::TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell0Ds.csv",
-                                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell1Ds.csv",
-                                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell2Ds.csv");
+    triMeshData.cell2DMks = {0, 0};
+
+
+    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell0Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell1Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell2Ds.csv");
 
     EXPECT_EQ(triMeshData, mesh.triMeshData);
 }
 
-TEST(InitTest, TriStructTest)
+TEST(TriangleVector, TriangleVectorTest)
 {
-    unsigned int triID = 0;
-    std::array<unsigned int, 3> vertIDs = {0, 1, 2};
-    std::array<unsigned int, 3> edgeIDs = {0, 1, 2};
-    std::array<Eigen::Vector2d, 3> triCoords = {
-        Eigen::Vector2d(0, 0),
-        Eigen::Vector2d(1, 0),
-        Eigen::Vector2d(1, 1)
-    };
+    TriangleVector triangles0;
 
-    ProjectLibrary::TriStruct triData(triID, vertIDs, triCoords, edgeIDs);
+    unsigned int triID0 = 0;
+    array<Vector2d, 3> triCoords0 = {Vector2d(0, 0), Vector2d(1, 0), Vector2d(1, 1)};
+    array<unsigned int, 3> vertIDs0 = {0, 1, 2};
+    array<unsigned int, 3> edgeIDs0 = {0, 1, 2};
 
-    ProjectLibrary::TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell0Ds.csv",
-                                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell1Ds.csv",
-                                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell2Ds.csv");
+    TriStruct triData0(triID0, vertIDs0, triCoords0, edgeIDs0);
+    Triangle tri0(triData0);
+    triangles0.triangles.push_back(tri0);
 
-    ProjectLibrary::TriStruct triDataEq(triID, mesh.triMeshData);
+    unsigned int triID1 = 1;
+    array<Vector2d, 3> triCoords1 = {Vector2d(0, 0), Vector2d(1, 1), Vector2d(0, 1)};
+    array<unsigned int, 3> vertIDs1 = {0, 2, 3};
+    array<unsigned int, 3> edgeIDs1 = {2, 3, 4};
 
-    EXPECT_EQ(triData, triDataEq);
+    TriStruct triData1(triID1, vertIDs1, triCoords1, edgeIDs1);
+    Triangle tri1(triData1);
+    triangles0.triangles.push_back(tri1);
+
+    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell0Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell1Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\InitMeshTest\\Cell2Ds.csv");
+
+    TriangleVector triangles1(mesh);
+
+    EXPECT_EQ(2, triangles1.size());
+    EXPECT_EQ(mesh.triMeshData.cell2DIDs.size(), triangles1.size());
+    EXPECT_EQ(triangles0, triangles1);
+}
+
+TEST(AdjacentTrianglesTest, GetAdjacentTrianglesTest)
+{
+    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\SortingTest\\Cell0Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\SortingTest\\Cell1Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\SortingTest\\Cell2Ds.csv");
+
+    ASSERT_TRUE(mesh.GetAdjacentTriangles(10)[0] == 5 || mesh.GetAdjacentTriangles(10)[1] == 6);
 }
 
 #endif // test_TriangularMesh_class_H
