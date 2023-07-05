@@ -1,19 +1,34 @@
-#include "Triangle_class.hpp"
 #include "TriangularMesh_class.hpp"
+#include "Triangle_class.hpp"
+#include "TriangleVector_class.hpp"
+
+using namespace ProjectLibrary;
 
 int main(int argc, char* argv[])
 {
-    try {
+    try
+    {
         if (argc < 4)
-            throw std::runtime_error("Fatal failure: too few arguments");
+            throw runtime_error("Fatal failure: too few arguments");
 
         if (argc > 4)
-            throw std::runtime_error("Fatal failure: too many arguments");
+            throw runtime_error("Fatal failure: too many arguments");
 
-        ProjectLibrary::TriangularMesh mesh(argv[1], argv[2], argv[3]);
+        TriangularMesh mesh(argv[1], argv[2], argv[3]);
 
         mesh.Show();
-    } catch (const std::exception& e){
-            return -1;
+
+        TriangleVector triangles(mesh);
+
+        HeapSortTriangles(triangles);
+        cout << "Sort:" << endl;
+        triangles.ShowTriangleVector();
+
+        vector<unsigned int> adj = mesh.GetAdjacentTriangles(94);
+        cout << adj[0] << "   " << adj [1] << endl;
+    }
+    catch (const exception& e)
+    {
+        return -1;
     }
 }

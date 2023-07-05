@@ -309,6 +309,6 @@ Cella0 = importCell0Ds(file_path0)
 Cella1 = importCell1Ds(file_path1)
 Cella2 = importCell2Ds(file_path2)
 
-showCells(Cella0, Cella1, Cella2)
+#showCells(Cella0, Cella1, Cella2)
 
 plot(Cella0, Cella1, Cella2)
