@@ -2,8 +2,6 @@
 #define test_TriangularMesh_class_H
 
 #include <gtest/gtest.h>
-#include "TriangularMesh_class.hpp"
-#include "Triangle_class.hpp"
 #include "TriangleVector_class.hpp"
 
 using namespace testing;
@@ -88,9 +86,9 @@ TEST(TriangleVector, TriangleVectorTest)
 
 TEST(AdjacentTrianglesTest, GetAdjacentTrianglesTest)
 {
-    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\SortingTest\\Cell0Ds.csv",
-                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\SortingTest\\Cell1Ds.csv",
-                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\SortingTest\\Cell2Ds.csv");
+    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\GeneralTest\\Cell0Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\GeneralTest\\Cell1Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\GeneralTest\\Cell2Ds.csv");
 
     ASSERT_TRUE(mesh.GetAdjacentTriangles(10)[0] == 5 || mesh.GetAdjacentTriangles(10)[1] == 6);
 }

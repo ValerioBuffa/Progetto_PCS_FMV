@@ -32,7 +32,7 @@ TEST(InitTest, TriStructTest)
     EXPECT_EQ(triData, triDataEq);
 }
 
-TEST(MemberTest, TriangleAreaTest)
+TEST(TriangleTest, TriangleAreaTest)
 {
     unsigned int triID = 0;
     array<Vector2d, 3> triCoords = {Vector2d(0, 0), Vector2d(1, 0), Vector2d(1, 1)};
