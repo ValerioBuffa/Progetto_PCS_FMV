@@ -19,6 +19,12 @@ bool operator != (const TriStruct &obj1, const TriStruct &obj2)
 }
 
 
+bool operator == (const Triangle &obj1, const Triangle &obj2)
+{
+    return obj1.triData ==obj2.triData;
+}
+
+
 //L'operatore di confronto > viene utilizzato per confrontare le due aree di Triangle.
 bool operator > (Triangle &obj1, Triangle &obj2)
 {

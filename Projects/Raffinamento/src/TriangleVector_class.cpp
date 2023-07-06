@@ -34,7 +34,7 @@ void TriangleVector::ShowTriangleVector()
 
 
 //Questa funzione restituisce la dimensione del vettore di Triangle.
-size_t TriangleVector::size()
+size_t TriangleVector::size() const
 {
     return triangles.size();
 }
@@ -62,6 +62,33 @@ bool operator == (TriangleVector obj1, TriangleVector obj2)
         }
     }
     return true;
+}
+
+
+const Triangle* TriangleVector::begin() const
+{
+    return &triangles[0];
+}
+
+const Triangle* TriangleVector::end() const
+{
+    return &triangles[0] + triangles.size();
+}
+
+
+//Questa funzione seleziona e salva in un oggetto TriangleVector i primi N triangoli di TriangleVector
+TriangleVector SelecTriangles(const TriangleVector& triangles, const unsigned int N)
+{
+    TriangleVector selectedTriangles;
+    unsigned int count = 0;
+
+    for (size_t i = 0; i < triangles.size() && count < N; i++)
+    {
+        selectedTriangles.triangles.push_back(triangles.triangles[i]);
+        count++;
+    }
+
+    return selectedTriangles;
 }
 
 

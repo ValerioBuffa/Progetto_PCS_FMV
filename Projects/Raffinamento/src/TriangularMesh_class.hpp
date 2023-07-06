@@ -55,6 +55,10 @@ void PrintToCSV1(const string& filePathOut1, TriMeshStruct &triMeshData);
 
 void PrintToCSV2(const string& filePathOut2, TriMeshStruct &triMeshData);
 
+int ToRefine(TriangularMesh& mesh, const double n);
+
+void Refine(TriangularMesh& mesh, const unsigned int N);
+
 }
 
 #endif // TriangularMesh_H

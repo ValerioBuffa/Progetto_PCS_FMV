@@ -268,11 +268,12 @@ vector<unsigned int> TriangularMesh::GetAdjacentTriangles(unsigned int edgeId)
 }
 
 
+//Questa funzione stampa in file csv i dati Cell0D
 void PrintToCSV0(const string& filePathOut0, TriMeshStruct &triMeshData)
 {
     try
     {
-        ofstream file(filePathOut0, ofstream::trunc);
+        ofstream file(filePathOut0, ofstream::trunc); //trunc se il file è pieno lo sovrascrive
         if (!file.is_open())
             throw runtime_error("Failed to open file: " + filePathOut0);
 
@@ -295,11 +296,12 @@ void PrintToCSV0(const string& filePathOut0, TriMeshStruct &triMeshData)
 }
 
 
+//Questa funzione stampa in file csv i dati Cell1D
 void PrintToCSV1(const string& filePathOut1, TriMeshStruct &triMeshData)
 {
     try
     {
-        ofstream file(filePathOut1, ofstream::trunc);
+        ofstream file(filePathOut1, ofstream::trunc); //trunc se il file è pieno lo sovrascrive
         if (!file.is_open())
             throw runtime_error("Failed to open file: " + filePathOut1);
 
@@ -322,11 +324,12 @@ void PrintToCSV1(const string& filePathOut1, TriMeshStruct &triMeshData)
 }
 
 
+//Questa funzione stampa in file csv i dati Cell2D
 void PrintToCSV2(const string& filePathOut2, TriMeshStruct &triMeshData)
 {
     try
     {
-        ofstream file(filePathOut2, ofstream::trunc);
+        ofstream file(filePathOut2, ofstream::trunc); //trunc se il file è pieno lo sovrascrive
         if (!file.is_open())
             throw runtime_error("Failed to open file: " + filePathOut2);
 
@@ -356,6 +359,7 @@ void PrintToCSV2(const string& filePathOut2, TriMeshStruct &triMeshData)
 }
 
 
+//Questa funzione stampa in file csv i dati Cell0D, Cell1D, Cell2D
 void TriangularMesh::PrintToCSV(const string& filePath0, const string& filePath1, const string& filePath2)
 {
     PrintToCSV0(filePath0, triMeshData);

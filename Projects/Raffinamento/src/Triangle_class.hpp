@@ -39,6 +39,8 @@ bool operator == (const TriStruct &obj1, const TriStruct &obj2);
 
 bool operator != (const TriStruct &obj1, const TriStruct &obj2);
 
+bool operator == (const Triangle &obj1, const Triangle &obj2);
+
 bool operator > (Triangle &obj1, Triangle &obj2);
 
 bool operator >= (Triangle &obj1, Triangle &obj2);
