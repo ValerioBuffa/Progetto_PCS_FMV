@@ -53,6 +53,32 @@ void Refine(TriangularMesh& mesh, const unsigned int N)
 void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& removed)
 {
     unsigned int flag = 0;
+    while(flag == 0)
+    {
+        unsigned int lT1 = 0;
+        if (flag == 0)
+        {
+            unsigned int T1 = triangle.triData.triID;
+            unsigned int lT1 = mesh.MaxEdge(T1);
+        }
+        else if(flag == 2)
+        {
+            //T1=NewT;
+            unsigned int T1 = triangle.triData.triID;
+            unsigned int lT1 = mesh.MaxEdge(T1);
+        }
+
+        if (mesh.triMeshData.cell1DMks[lT1] == 5 || mesh.triMeshData.cell1DMks[lT1] == 6 ||
+            mesh.triMeshData.cell1DMks[lT1] == 7 || mesh.triMeshData.cell1DMks[lT1] == 8)
+        {
+
+            flag=1;
+        }
+        else
+        {
+
+        }
+    }
 }
 
 

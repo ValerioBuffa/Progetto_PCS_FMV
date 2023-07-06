@@ -29,7 +29,7 @@ struct TriMeshStruct
 
 class TriangularMesh
 {
-    private:        
+    private:
         unordered_map<unsigned int, vector<unsigned int>> adjacentTriangles;
     public:
         TriMeshStruct triMeshData;
@@ -41,6 +41,10 @@ class TriangularMesh
         vector<unsigned int> GetAdjacentTriangles(unsigned int edgeId);
 
         void PrintToCSV(const string& filePath0, const string& filePath1, const string& filePath2);
+
+        double EdgeLength(const unsigned int& cell2DEdgesID);
+
+        unsigned int MaxEdge(const unsigned int& cell2DID);
 };
 
 

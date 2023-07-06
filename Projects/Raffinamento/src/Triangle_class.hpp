@@ -9,12 +9,9 @@ namespace ProjectLibrary
 struct TriStruct
 {
     unsigned int triID;
-    array<unsigned int, 3> vertIDs;
     array<Vector2d, 3> triCoords;
-    array<unsigned int, 3> edgeIDs;
 
-    TriStruct(unsigned int &triID, array<unsigned int, 3> &vertIDs, array<Vector2d, 3> &triCoords, array<unsigned int, 3> &edgeIDs)
-     : triID(triID), vertIDs(vertIDs), triCoords(triCoords), edgeIDs(edgeIDs) {}
+    TriStruct(unsigned int &triID, array<Vector2d, 3> &triCoords) : triID(triID), triCoords(triCoords) {}
 
     TriStruct(unsigned int &id, TriMeshStruct &triMesh);
 };

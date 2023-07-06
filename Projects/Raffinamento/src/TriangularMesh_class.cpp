@@ -368,5 +368,41 @@ void TriangularMesh::PrintToCSV(const string& filePath0, const string& filePath1
 }
 
 
+//Questa funzione restituisce il valore della lunghezza del lato dato l'id del lato
+double TriangularMesh::EdgeLength(const unsigned int& cell1DID)
+{
+    const Vector2i& pointIDs = triMeshData.cell1DVerts[cell1DID];
+    const Vector2d& v1 = triMeshData.cell0DCoords[pointIDs[0]];
+    const Vector2d& v2 = triMeshData.cell0DCoords[pointIDs[1]];
+
+    // Calcola la distanza tra i due vertici
+    double length = (v2 - v1).norm();
+
+    return length;
+}
+
+
+//Questa funzione restituisce l'id del lato più lungo di un Triangle
+unsigned int TriangularMesh::MaxEdge(const unsigned int& cell2DID)
+{
+    const array<unsigned int, 3>& edges = triMeshData.cell2DEdges[cell2DID];
+    double edgeLengths[3];
+    edgeLengths[0] = EdgeLength(edges[0]);
+    edgeLengths[1] = EdgeLength(edges[1]);
+    edgeLengths[2] = EdgeLength(edges[2]);
+
+    unsigned int maxIndex = 0;
+    for (unsigned int i = 1; i < 3; ++i)
+    {
+        if (edgeLengths[i] > edgeLengths[maxIndex])
+        {
+            maxIndex = i;
+        }
+    }
+
+    return edges[maxIndex];
+}
+
+
 
 }
