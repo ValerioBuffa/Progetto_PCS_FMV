@@ -8,31 +8,28 @@ int main(int argc, char* argv[])
 {
     try
     {
-        if (argc < 4)
-            throw runtime_error("Fatal failure: too few arguments");
-
-        if (argc > 4)
-            throw runtime_error("Fatal failure: too many arguments");
+        if (argc != 5)
+            throw runtime_error("Fatal failure: check the arguments");
 
         TriangularMesh mesh(argv[1], argv[2], argv[3]);
+        //mesh.Show();
 
-        mesh.Show();
+        double n = stod(argv[4]);
 
-        TriangleVector triangles(mesh);
+        int N = ToRefine(mesh, n);
+        cout << N << " Triangle to refine" << endl;
 
-        HeapSortTriangles(triangles);
-        cout << "Sort:" << endl;
-        triangles.ShowTriangleVector();
+        //Refine(mesh, N);
 
-        vector<unsigned int> adj = mesh.GetAdjacentTriangles(94);
-        cout << adj[0] << "   " << adj [1] << endl;
+        //mesh.Show();
 
-        mesh.PrintToCSV("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell0Ds.csv",
-                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell1Ds.csv",
-                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell2Ds.csv");
+        //mesh.PrintToCSV("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell0Ds.csv",
+        //                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell1Ds.csv",
+        //                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell2Ds.csv");
     }
     catch (const exception& e)
     {
+        cout << "Exception occurred: " << e.what() << endl;
         return -1;
     }
 }
