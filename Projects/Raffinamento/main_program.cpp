@@ -19,13 +19,13 @@ int main(int argc, char* argv[])
         int N = ToRefine(mesh, n);
         cout << N << " Triangle to refine" << endl;
 
-        //Refine(mesh, N);
+        Refine(mesh, N);
 
         //mesh.Show();
 
-        //mesh.PrintToCSV("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell0Ds.csv",
-        //                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell1Ds.csv",
-        //                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell2Ds.csv");
+        mesh.PrintToCSV("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell0Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell1Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell2Ds.csv");
     }
     catch (const exception& e)
     {

@@ -247,7 +247,10 @@ def plotCell2Ds(cell0ds, cell1ds, cell2ds):
     max_marker = max(cell2ds, key=lambda cell: cell.marker).marker
     gradient_values = np.linspace(0, 1, max_marker + 1)
 
-    cmap = mcolors.LinearSegmentedColormap.from_list('my_cmap', ['white', 'darkgray'], N=max_marker+1)
+    if max_marker == 0:
+        cmap = mcolors.ListedColormap(['white'])
+    else:
+        cmap = mcolors.LinearSegmentedColormap.from_list('my_cmap', ['white', 'darkgray'], N=max_marker + 1)
 
     color_map = {marker: cmap(gradient_values[marker]) for marker in range(max_marker + 1)}
     legend_elements = [
@@ -355,8 +358,5 @@ Cella0_OUT = importCell0Ds(file_OUT_path0)
 Cella1_OUT = importCell1Ds(file_OUT_path1)
 Cella2_OUT = importCell2Ds(file_OUT_path2)
 
-#showCells(Cella0, Cella1, Cella2)
-
 Vplot(Cella0_IN, Cella1_IN, Cella2_IN, Cella0_OUT, Cella1_OUT, Cella2_OUT)
-#plot(Cella0_IN, Cella1_IN, Cella2_IN)
-#plot(Cella0_OUT, Cella1_OUT, Cella2_OUT)
+
