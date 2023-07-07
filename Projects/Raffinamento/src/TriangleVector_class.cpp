@@ -76,6 +76,16 @@ const Triangle* TriangleVector::end() const
 }
 
 
+void TriangleVector::Add(unsigned int triID, TriangularMesh& triMesh)
+{
+    TriStruct triData(triID, triMesh.triMeshData);
+
+    Triangle triangle(triData);
+
+    triangles.push_back(triangle);
+}
+
+
 //Questa funzione seleziona e salva in un oggetto TriangleVector i primi N triangoli di TriangleVector
 TriangleVector SelecTriangles(const TriangleVector& triangles, const unsigned int N)
 {

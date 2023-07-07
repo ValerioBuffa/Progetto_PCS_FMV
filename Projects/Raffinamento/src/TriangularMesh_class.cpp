@@ -368,9 +368,59 @@ void TriangularMesh::PrintToCSV(const string& filePath0, const string& filePath1
 }
 
 
+//Questa funzione aggiunge in coda alla struttura dati della mesh i dati di un punto
+void TriangularMesh::CreatePoint(const unsigned int& cell0DID, const Vector2d& cell0DCoord, const unsigned int& cell0DMk)
+{
+    triMeshData.cell0DIDs.push_back(cell0DID);
+    triMeshData.cell0DCoords.push_back(cell0DCoord);
+    triMeshData.cell0DMks.push_back(cell0DMk);
+}
+
+
+//Questa funzione aggiunge in coda alla struttura dati della mesh i dati di un lato
+void TriangularMesh::CreateEdge(const unsigned int& cell1DID, const Vector2i& cell1DVert, const unsigned int& cell1DMk)
+{
+    triMeshData.cell1DIDs.push_back(cell1DID);
+    triMeshData.cell1DVerts.push_back(cell1DVert);
+    triMeshData.cell1DMks.push_back(cell1DMk);
+}
+
+
+//Questa funziona aggiorna i dati relativi ad un lato
+void TriangularMesh::UpdateEdge(const unsigned int& cell1DID, const Vector2i& cell1DVert, const unsigned int& cell1DMk)
+{
+    triMeshData.cell1DVerts[cell1DID] = cell1DVert;
+    triMeshData.cell1DMks[cell1DID] = cell1DMk;
+}
+
+
+//Questa funzione aggiunge in coda allaa struttura dati della mesh i dati di un triangolo
+void TriangularMesh::CreateTriangle(const unsigned int& cell2DID, const array<unsigned int, 3>& cell2DVerts, const array<unsigned int, 3>& cell2DEdges, const unsigned int& cell2DMk)
+{
+    triMeshData.cell2DIDs.push_back(cell2DID);
+    triMeshData.cell2DVerts.push_back(cell2DVerts);
+    triMeshData.cell2DEdges.push_back(cell2DEdges);
+    triMeshData.cell2DMks.push_back(cell2DMk);
+}
+
+
+//Questa funziona aggiorna i dati relativi ad un triangolo
+void TriangularMesh::UpdateTriangle(const unsigned int& cell2DID, const array<unsigned int, 3>& cell2DVerts, const array<unsigned int, 3>& cell2DEdges, const unsigned int& cell2DMk)
+{
+    triMeshData.cell2DVerts[cell2DID] = cell2DVerts;
+    triMeshData.cell2DEdges[cell2DID] = cell2DEdges;
+    triMeshData.cell2DMks[cell2DID] = cell2DMk;
+}
+
+
 //Questa funzione restituisce il valore della lunghezza del lato dato l'id del lato
 double TriangularMesh::EdgeLength(const unsigned int& cell1DID)
 {
+    if (cell1DID >= triMeshData.cell1DIDs.size())
+    {
+        throw invalid_argument("Invalid cell1DID");
+    }
+
     const Vector2i& pointIDs = triMeshData.cell1DVerts[cell1DID];
     const Vector2d& v1 = triMeshData.cell0DCoords[pointIDs[0]];
     const Vector2d& v2 = triMeshData.cell0DCoords[pointIDs[1]];
@@ -385,6 +435,11 @@ double TriangularMesh::EdgeLength(const unsigned int& cell1DID)
 //Questa funzione restituisce l'id del lato più lungo di un Triangle
 unsigned int TriangularMesh::MaxEdge(const unsigned int& cell2DID)
 {
+    if (cell2DID >= triMeshData.cell2DIDs.size())
+    {
+        throw invalid_argument("Invalid cell2DID");
+    }
+
     const array<unsigned int, 3>& edges = triMeshData.cell2DEdges[cell2DID];
     double edgeLengths[3];
     edgeLengths[0] = EdgeLength(edges[0]);
@@ -401,6 +456,25 @@ unsigned int TriangularMesh::MaxEdge(const unsigned int& cell2DID)
     }
 
     return edges[maxIndex];
+}
+
+
+//Questa funzione calcola le coordinate del punto medio di cell1DID
+Vector2d TriangularMesh::MidPoint(const unsigned int& cell1DID)
+{
+    if (cell1DID >= triMeshData.cell1DIDs.size())
+    {
+        throw invalid_argument("Invalid cell1DID");
+    }
+
+    const Vector2i& vertexIndices = triMeshData.cell1DVerts[cell1DID];
+
+    const Vector2d& vertex0 = triMeshData.cell0DCoords[vertexIndices[0]];
+    const Vector2d& vertex1 = triMeshData.cell0DCoords[vertexIndices[1]];
+
+    Vector2d midPoint = (vertex0 + vertex1) / 2.0;
+
+    return midPoint;
 }
 
 

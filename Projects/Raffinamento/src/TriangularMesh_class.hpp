@@ -42,9 +42,26 @@ class TriangularMesh
 
         void PrintToCSV(const string& filePath0, const string& filePath1, const string& filePath2);
 
-        double EdgeLength(const unsigned int& cell2DEdgesID);
+        void CreatePoint(const unsigned int& cell0DID, const Vector2d& cell0DCoord, const unsigned int& cell0DMk);
+
+        void CreateEdge(const unsigned int& cell1DID, const Vector2i& cell1DVert, const unsigned int& cell1DMk);
+
+        void UpdateEdge(const unsigned int& cell1DID, const Vector2i& cell1DVert, const unsigned int& cell1DMk);
+
+        void CreateTriangle(const unsigned int& cell2DID, const array<unsigned int, 3>& cell2DVerts, const array<unsigned int, 3>& cell2DEdges, const unsigned int& cell2DMk);
+
+        void UpdateTriangle(const unsigned int& cell2DID, const array<unsigned int, 3>& cell2DVerts, const array<unsigned int, 3>& cell2DEdges, const unsigned int& cell2DMk);
+
+        double EdgeLength(const unsigned int& cell1DID);
 
         unsigned int MaxEdge(const unsigned int& cell2DID);
+
+        Vector2d MidPoint(const unsigned int& cell1DID);
+
+        void Bisection(const unsigned int& cell2DID, unsigned int& newcell2DID, const unsigned int& cell1DID,
+                       const unsigned int& cell2DID2, unsigned int& newcell2DID2, const unsigned int& cell1DID2,
+                       unsigned int& midpoint, const unsigned int& mode);
+
 };
 
 

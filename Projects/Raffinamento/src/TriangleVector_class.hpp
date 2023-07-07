@@ -19,6 +19,8 @@ public:
 
     void ShowTriangleVector();
 
+    void Add(unsigned int triID, TriangularMesh& triMesh);
+
     size_t size() const;
 
     Triangle& operator[](size_t index);
