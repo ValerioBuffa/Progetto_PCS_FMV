@@ -104,9 +104,12 @@ TEST(EdgeTest, EdgeLengthTest)
     double Length2 = mesh.EdgeLength(16);
     double expectedLength2 = 0.4;
 
+    unsigned int invalidID = 999;
+
     ASSERT_DOUBLE_EQ(Length0, expectedLength0);
     ASSERT_DOUBLE_EQ(Length1, expectedLength1);
     ASSERT_DOUBLE_EQ(Length2, expectedLength2);
+    EXPECT_THROW(mesh.EdgeLength(invalidID), invalid_argument);
 }
 
 TEST(EdgeTest, EdgeMaxTest)
@@ -124,10 +127,38 @@ TEST(EdgeTest, EdgeMaxTest)
     unsigned int maxEdge2 = mesh.MaxEdge(8);
     unsigned int expectedmaxEdge2 = 16;
 
+    unsigned int invalidID = 999;
 
     ASSERT_DOUBLE_EQ(maxEdge0, expectedmaxEdge0);
     ASSERT_DOUBLE_EQ(maxEdge1, expectedmaxEdge1);
     ASSERT_DOUBLE_EQ(maxEdge2, expectedmaxEdge2);
+    EXPECT_THROW(mesh.MaxEdge(invalidID), invalid_argument);
+}
+
+TEST(EdgeTest, MidPointTest)
+{
+    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\GeneralTest\\Cell0Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\GeneralTest\\Cell1Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\GeneralTest\\Cell2Ds.csv");
+
+    Vector2d midPoint0 = mesh.MidPoint(4);
+    Vector2d expectedmidPoint0 = {0.3, 0.2};
+
+    Vector2d midPoint1 = mesh.MidPoint(11);
+    Vector2d expectedmidPoint1 = {0.7, 0.6};
+
+    Vector2d midPoint2 = mesh.MidPoint(16);
+    Vector2d expectedmidPoint2 = {1, 0.8};
+
+    unsigned int invalidID = 999;
+
+    ASSERT_DOUBLE_EQ(midPoint0.x(), expectedmidPoint0.x());
+    ASSERT_DOUBLE_EQ(midPoint0.y(), expectedmidPoint0.y());
+    ASSERT_DOUBLE_EQ(midPoint1.x(), expectedmidPoint1.x());
+    ASSERT_DOUBLE_EQ(midPoint1.y(), expectedmidPoint1.y());
+    ASSERT_DOUBLE_EQ(midPoint2.x(), expectedmidPoint2.x());
+    ASSERT_DOUBLE_EQ(midPoint2.y(), expectedmidPoint2.y());
+    EXPECT_THROW(mesh.MidPoint(invalidID), invalid_argument);
 }
 
 #endif // test_TriangularMesh_class_H
