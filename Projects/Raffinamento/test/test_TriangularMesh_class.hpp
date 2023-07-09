@@ -19,7 +19,7 @@ TEST(InitTest, InitTriMeshStructTest)
     triMeshData.cell0DCoords.push_back(Vector2d(1.0, 1.0));
     triMeshData.cell0DCoords.push_back(Vector2d(0.0, 1.0));
 
-    triMeshData.cell0DMks = {1, 2, 3, 3};
+    triMeshData.cell0DMks = {1, 2, 3, 4};
 
 
     triMeshData.cell1DIDs = {0, 1, 2, 3, 4};
@@ -30,7 +30,7 @@ TEST(InitTest, InitTriMeshStructTest)
     triMeshData.cell1DVerts.push_back(Vector2i(2, 3));
     triMeshData.cell1DVerts.push_back(Vector2i(0, 3));
 
-    triMeshData.cell1DMks = {1, 1, 2, 3, 3};
+    triMeshData.cell1DMks = {5, 6, 0, 7, 8};
 
 
     triMeshData.cell2DIDs = {0, 1};
