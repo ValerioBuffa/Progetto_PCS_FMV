@@ -13,6 +13,7 @@ int main(int argc, char* argv[])
 
         TriangularMesh mesh(argv[1], argv[2], argv[3]);
         //mesh.Show();
+        //mesh.ShowAdjacentTriangles();
 
         double n = stod(argv[4]);
 
@@ -21,7 +22,8 @@ int main(int argc, char* argv[])
 
         Refine(mesh, N);
 
-        //mesh.Show();
+        mesh.Show();
+        mesh.ShowAdjacentTriangles();
 
         mesh.PrintToCSV("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell0Ds.csv",
                         "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Output\\Cell1Ds.csv",
