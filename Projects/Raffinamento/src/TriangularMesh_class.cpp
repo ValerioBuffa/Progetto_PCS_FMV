@@ -268,6 +268,20 @@ vector<unsigned int> TriangularMesh::GetAdjacentTriangles(unsigned int edgeId)
 }
 
 
+void TriangularMesh::ShowAdjacentTriangles()
+{
+    for (const auto& entry : adjacentTriangles)
+    {
+        cout << "Edge ID: " << entry.first;
+        cout << "\tTriangles: ";
+        for (const auto& triangleId : entry.second)
+        {
+            cout << triangleId << " ";
+        }
+        cout << endl;
+    }
+}
+
 //Questa funzione stampa in file csv i dati Cell0D
 void PrintToCSV0(const string& filePathOut0, TriMeshStruct &triMeshData)
 {

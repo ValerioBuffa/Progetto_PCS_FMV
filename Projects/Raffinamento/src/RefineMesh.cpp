@@ -26,188 +26,216 @@ bool TriangleInVector(const Triangle& triangle, const TriangleVector& removed)
 }
 
 
-//Qiesta funzione divide a metà un lato di un triangolo aggiornando i dai della mesh
-void TriangularMesh::Bisection(const unsigned int& cell2DID, unsigned int& newcell2DID, const unsigned int& cell1DID,
-                               const unsigned int& cell2DID2, unsigned int& newcell2DID2, const unsigned int& cell1DID2,
-                               unsigned int& midpoint, const unsigned int& mode)
+//Questa funzione divide a metà un lato di un triangolo aggiornando i dai della mesh
+void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const unsigned int& lT1,
+                               const unsigned int& T2, unsigned int& GT2,
+                               unsigned int& MP1, const unsigned int& MP2,
+                               const unsigned int& flag, const unsigned int& mode)
 {
-    if (cell1DID >= triMeshData.cell1DIDs.size() && cell2DID >= triMeshData.cell2DIDs.size())
+    if (T1 >= triMeshData.cell2DIDs.size())
     {
-        throw invalid_argument("Invalid input");
+        throw invalid_argument("Invalid T1");
     }
 
-    //Salvo i dati dei vetrici del lato
-    Vector2i edgeVerts = triMeshData.cell1DVerts[cell1DID];
-    unsigned int edgeMk = triMeshData.cell1DMks[cell1DID];
+    if (lT1 >= triMeshData.cell1DIDs.size())
+    {
+        throw invalid_argument("Invalid lT1");
+    }
 
-    //Calcolo il punto medio
-    Vector2d midPoint = MidPoint(cell1DID);
+    // Salvo i dati dei vetrici del lato
+    Vector2i lT1VertOld = triMeshData.cell1DVerts[lT1];
+    unsigned int lT1Mk = triMeshData.cell1DMks[lT1];
 
-    // Aggiungere il nuovo punto medio all'elenco dei punti della mesh
-    unsigned int newPointID = triMeshData.cell0DIDs.size(); // Nuovo ID del punto
-    CreatePoint(newPointID, midPoint, edgeMk);
-    midpoint = newPointID;
+    // Calcolo il punto medio
+    Vector2d midPoint = MidPoint(lT1);
 
-    //Salvo i dati dei vertici del triangolo
-    array<unsigned int, 3>& triangleVerts = triMeshData.cell2DVerts[cell2DID];
+    // Aggiungo il nuovo punto medio all'elenco dei punti della mesh
+    MP1 = triMeshData.cell0DIDs.size(); // Nuovo ID del punto
+    CreatePoint(MP1, midPoint, lT1Mk);
 
-    // Trovare l'indice del vertice escluso nell'array dei vertici
-    unsigned int excludedVertex = 0;
+    // Salvo i dati dei vertici del triangolo
+    array<unsigned int, 3>& T1VertOld = triMeshData.cell2DVerts[T1];
+
+    // Trovo l'indice del vertice escluso nell'array dei vertici
+    unsigned int PlT1opp = 0;
     for (int i = 0; i < 3; i++)
     {
-        if (triangleVerts[i] != static_cast<unsigned int>(edgeVerts[0]) && triangleVerts[i] != static_cast<unsigned int>(edgeVerts[1]))
+        if (T1VertOld[i] != static_cast<unsigned int>(lT1VertOld[0]) && T1VertOld[i] != static_cast<unsigned int>(lT1VertOld[1]))
         {
-            excludedVertex = triangleVerts[i];
+            PlT1opp = T1VertOld[i];
             break;
         }
     }
 
-    //Cerco gli id dei lati più corti del triangolo
-    array<unsigned int, 3> triangleEdge = triMeshData.cell2DEdges[cell2DID];
-    array<unsigned int, 2> triEdge;
+    // Cerco gli id dei lati più corti del triangolo
+    array<unsigned int, 3> T1EdgeOld = triMeshData.cell2DEdges[T1];
+    array<unsigned int, 2> T1OtherEdge;
     int index = 0;
     for (int i = 0; i < 3; i++) {
-        if (triangleEdge[i] != cell1DID) {
-            triEdge[index] = triangleEdge[i];
+        if (T1EdgeOld[i] != lT1) {
+            T1OtherEdge[index] = T1EdgeOld[i];
             index++;
         }
     }
 
-    //Creo il nuovo lato dato dalla bisezione
-    unsigned int newEdgeID = triMeshData.cell1DIDs.size();
-    Vector2i newVertsID = {newPointID, excludedVertex};
-    CreateEdge(newEdgeID, newVertsID, edgeMk);
+    // Creo il nuovo lato dato dalla bisezione
+    unsigned int lMP1 = triMeshData.cell1DIDs.size();
+    Vector2i MP1Vert = {MP1, PlT1opp};
+    CreateEdge(lMP1, MP1Vert, 0);
 
-    //Aggiorno il lato di input dividendolo con il punto medio
-    Vector2i newVertsID1 = {newPointID, edgeVerts[0]};
-    UpdateEdge(cell1DID, newVertsID1, edgeMk);
+    // Aggiorno il lato di input dividendolo con il punto medio
+    Vector2i LT1Vert = {MP1, lT1VertOld[0]};
+    UpdateEdge(lT1, LT1Vert, lT1Mk);
 
-    //Creo l'altro lato di input diviso con il punto medio
-    unsigned int newEdgeID2 = triMeshData.cell1DIDs.size();
-    Vector2i newVertsID2 = {newPointID, edgeVerts[1]};
-    CreateEdge(newEdgeID2, newVertsID2, edgeMk);
+    // Creo l'altro lato di input diviso con il punto medio
+    unsigned int dlT1 = triMeshData.cell1DIDs.size();
+    Vector2i dlT1newVert = {MP1, lT1VertOld[1]};
+    CreateEdge(dlT1, dlT1newVert, lT1Mk);
 
-    //Preparo gli elementi che servono per aggiornare la mesh per i lati e triangoli
-    array<unsigned int, 3> triV1;
-    array<unsigned int, 3> triV2;
-    array<unsigned int, 3> triE1;
-    array<unsigned int, 3> triE2;
+    // Preparo gli elementi che servono per aggiornare la mesh per i lati e triangoli
+    array<unsigned int, 3> T1Vert;
+    array<unsigned int, 3> GT1Vert;
+    array<unsigned int, 3> T1Edge;
+    array<unsigned int, 3> GT1Edge;
 
-    if(triMeshData.cell1DVerts[cell1DID][0] == edgeVerts[0] || triMeshData.cell1DVerts[cell1DID][1] == edgeVerts[0])
+    if (triMeshData.cell1DVerts[lT1][0] == lT1VertOld[0] || triMeshData.cell1DVerts[lT1][1] == lT1VertOld[0])
     {
-        triV1 = {newPointID, excludedVertex, static_cast<unsigned int>(edgeVerts[0])};
-        triV2 = {newPointID, excludedVertex, static_cast<unsigned int>(edgeVerts[1])};
+        T1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[0])};
+        GT1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[1])};
     }
     else
     {
-        triV1 = {newPointID, excludedVertex, static_cast<unsigned int>(edgeVerts[1])};
-        triV2 = {newPointID, excludedVertex, static_cast<unsigned int>(edgeVerts[0])};
+        T1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[1])};
+        GT1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[0])};
     }
 
-    if(triMeshData.cell1DVerts[triEdge[0]][0] == edgeVerts[0] || triMeshData.cell1DVerts[triEdge[1]][0] == edgeVerts[0] ||
-       triMeshData.cell1DVerts[triEdge[0]][1] == edgeVerts[0] || triMeshData.cell1DVerts[triEdge[1]][1] == edgeVerts[0])
+    if (triMeshData.cell1DVerts[T1OtherEdge[0]][0] == lT1VertOld[0] || triMeshData.cell1DVerts[T1OtherEdge[0]][1] == lT1VertOld[0])
     {
-        triE1= {newEdgeID, cell1DID, triEdge[0]};
-        triE2= {newEdgeID, newEdgeID2, triEdge[1]};
+        T1Edge = {lMP1, lT1, T1OtherEdge[0]};
+        GT1Edge = {lMP1, dlT1, T1OtherEdge[1]};
     }
     else
     {
-        triE1= {newEdgeID, cell1DID, triEdge[1]};
-        triE2= {newEdgeID, newEdgeID2, triEdge[0]};
+        T1Edge = {lMP1, lT1, T1OtherEdge[1]};
+        GT1Edge = {lMP1, dlT1, T1OtherEdge[0]};
     }
 
-    //Aggiorno il triangolo diviso dal lato
-    unsigned int triMK1 = triMeshData.cell2DMks[cell2DID]+1;
-    UpdateTriangle(cell2DID, triV1, triE1, triMK1);
+    // Aggiorno il triangolo diviso dal lato
+    unsigned int T1Mk0 = triMeshData.cell2DMks[T1];
+    unsigned int T1Mk = T1Mk0 + 1;
+    UpdateTriangle(T1, T1Vert, T1Edge, T1Mk);
 
-    //Creo l'altra metà del triangolo
-    newcell2DID = triMeshData.cell2DIDs.size();
-    unsigned int triMK2 = triMeshData.cell2DMks[cell2DID] + 1;
-    CreateTriangle(newcell2DID, triV2, triE2, triMK2);
+    // Creo l'altra metà del triangolo
+    GT1 = triMeshData.cell2DIDs.size();
+    unsigned int GT1Mk = T1Mk0 + 1;
+    CreateTriangle(GT1, GT1Vert, GT1Edge, GT1Mk);
 
-    adjacentTriangles[newEdgeID].push_back(cell2DID);
-    adjacentTriangles[newEdgeID].push_back(newcell2DID);
+    adjacentTriangles[lMP1].push_back(T1);
+    adjacentTriangles[lMP1].push_back(GT1);
+    adjacentTriangles[dlT1].push_back(GT1);
 
+    adjacentTriangles[GT1Edge[2]].erase(
+        remove( adjacentTriangles[GT1Edge[2]].begin(), adjacentTriangles[GT1Edge[2]].end(), T1 ),
+        adjacentTriangles[GT1Edge[2]].end() );
+    adjacentTriangles[GT1Edge[2]].push_back(GT1);
+
+
+    //Si attiva questa modalità nel caso lT1==lT2
     if (mode == 1)
     {
-        if (cell1DID2 >= triMeshData.cell1DIDs.size() && cell2DID2 >= triMeshData.cell2DIDs.size())
+        if (T2 >= triMeshData.cell2DIDs.size())
         {
-            throw invalid_argument("Invalid cell1DID2");
+            throw invalid_argument("Invalid T2");
         }
 
-        //Salvo i dati dei vetrici del lato del secondo triangolo
-        Vector2i edgeVerts2 = triMeshData.cell1DVerts[cell1DID2];
+        // Salvo i dati dei vertici del triangolo
+        array<unsigned int, 3>& T2VertOld = triMeshData.cell2DVerts[T2];
 
-        //Salvo i dati dei vertici del triangolo
-        array<unsigned int, 3>& triangleVerts2 = triMeshData.cell2DVerts[cell2DID2];
-
-        // Trovare l'indice del vertice escluso nell'array dei vertici del secondo triangolo
-        unsigned int excludedVertex2 = 0;
+        // Trovo l'indice del vertice escluso nell'array dei vertici del secondo triangolo
+        unsigned int PlT2opp = 0;
         for (int i = 0; i < 3; i++)
         {
-            if (triangleVerts2[i] != static_cast<unsigned int>(edgeVerts2[0]) && triangleVerts2[i] != static_cast<unsigned int>(edgeVerts2[1]))
+            if (T2VertOld[i] != static_cast<unsigned int>(lT1VertOld[0]) && T2VertOld[i] != static_cast<unsigned int>(lT1VertOld[1]))
             {
-                excludedVertex2 = triangleVerts2[i];
+                PlT2opp = T2VertOld[i];
                 break;
             }
         }
 
-        //Cerco gli id dei lati più corti del secondo triangolo
-        array<unsigned int, 3> triangleEdge2 = triMeshData.cell2DEdges[cell2DID];
-        array<unsigned int, 2> triEdge2;
-        int index = 0;
+        // Cerco gli id dei lati più corti del secondo triangolo
+        array<unsigned int, 3> T2EdgeOld = triMeshData.cell2DEdges[T2];
+        array<unsigned int, 2> T2OtherEdge;
+        index = 0;
         for (int i = 0; i < 3; i++) {
-            if (triangleEdge2[i] != cell1DID2) {
-                triEdge2[index] = triangleEdge2[i];
+            if (T2EdgeOld[i] != lT1) {
+                T2OtherEdge[index] = T2EdgeOld[i];
                 index++;
             }
         }
 
-        //Creo il nuovo lato dato dalla bisezione del secondo triangolo
-        unsigned int newEdgeID2 = triMeshData.cell1DIDs.size();
-        Vector2i newVertsID2 = {newPointID, excludedVertex2};
-        CreateEdge(newEdgeID2, newVertsID2, edgeMk);
+        // Creo il nuovo lato dato dalla bisezione del secondo triangolo
+        unsigned int lMP2 = triMeshData.cell1DIDs.size();
+        Vector2i lT2Vert = {MP1, PlT2opp};
+        CreateEdge(lMP2, lT2Vert, 0);
 
-        //Preparo gli elementi che servono per aggiornare la mesh per i lati e triangoli
-        array<unsigned int, 3> triV12;
-        array<unsigned int, 3> triV22;
-        array<unsigned int, 3> triE12;
-        array<unsigned int, 3> triE22;
+        // Preparo gli elementi che servono per aggiornare la mesh per i lati e triangoli
+        array<unsigned int, 3> T2Vert;
+        array<unsigned int, 3> GT2Vert;
+        array<unsigned int, 3> T2Edge;
+        array<unsigned int, 3> GT2Edge;
 
-        if(triMeshData.cell1DVerts[cell1DID2][0] == edgeVerts2[0] || triMeshData.cell1DVerts[cell1DID2][1] == edgeVerts2[0])
+        if (triMeshData.cell1DVerts[lT1][0] == lT1VertOld[0] || triMeshData.cell1DVerts[lT1][1] == lT1VertOld[0])
         {
-            triV12 = {newPointID, excludedVertex2, static_cast<unsigned int>(edgeVerts2[0])};
-            triV22 = {newPointID, excludedVertex2, static_cast<unsigned int>(edgeVerts2[1])};
+            T2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[0])};
+            GT2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[1])};
         }
         else
         {
-            triV12 = {newPointID, excludedVertex2, static_cast<unsigned int>(edgeVerts2[1])};
-            triV22 = {newPointID, excludedVertex2, static_cast<unsigned int>(edgeVerts2[0])};
+            T2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[1])};
+            GT2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[0])};
         }
 
-        if(triMeshData.cell1DVerts[triEdge[0]][0] == edgeVerts2[0] || triMeshData.cell1DVerts[triEdge[1]][0] == edgeVerts2[0] ||
-           triMeshData.cell1DVerts[triEdge[0]][1] == edgeVerts2[0] || triMeshData.cell1DVerts[triEdge[1]][1] == edgeVerts2[0])
+        if (triMeshData.cell1DVerts[T2OtherEdge[0]][0] == lT1VertOld[0] || triMeshData.cell1DVerts[T2OtherEdge[0]][1] == lT1VertOld[0])
         {
-            triE12= {newEdgeID2, cell1DID2, triEdge[0]};
-            triE22= {newEdgeID2, newEdgeID2, triEdge[1]};
+            T2Edge = {lMP2, lT1, T2OtherEdge[0]};
+            GT2Edge = {lMP2, dlT1, T2OtherEdge[1]};
         }
         else
         {
-            triE12= {newEdgeID2, cell1DID2, triEdge[1]};
-            triE22= {newEdgeID2, newEdgeID2, triEdge[0]};
+            T2Edge = {lMP2, lT1, T2OtherEdge[1]};
+            GT2Edge = {lMP2, dlT1, T2OtherEdge[0]};
         }
 
-        //Aggiorno il triangolo diviso dal lato
-        unsigned int triMK3 = triMeshData.cell2DMks[cell2DID2]+1;
-        UpdateTriangle(cell2DID2, triV12, triE12, triMK3);
+        // Aggiorno il triangolo diviso dal lato
+        unsigned int T2Mk0 = triMeshData.cell2DMks[T2];
+        unsigned int T2Mk = T2Mk0 + 1;
+        UpdateTriangle(T2, T2Vert, T2Edge, T2Mk);
 
-        //Creo l'altra metà del triangolo
-        newcell2DID2 = triMeshData.cell2DIDs.size();
-        unsigned int triMK4 = triMeshData.cell2DMks[cell2DID2] + 1;
-        CreateTriangle(newcell2DID2, triV22, triE22, triMK4);
+        // Creo l'altra metà del triangolo
+        GT2 = triMeshData.cell2DIDs.size();
+        unsigned int GT2Mk = T2Mk0 + 1;
+        CreateTriangle(GT2, GT2Vert, GT2Edge, GT2Mk);
 
-        adjacentTriangles[newEdgeID2].push_back(cell2DID2);
-        adjacentTriangles[newEdgeID2].push_back(newcell2DID2);
+        adjacentTriangles[lMP2].push_back(T2);
+        adjacentTriangles[lMP2].push_back(GT2);
+        adjacentTriangles[dlT1].push_back(GT2);
+
+        adjacentTriangles[GT2Edge[2]].erase(
+            remove( adjacentTriangles[GT2Edge[2]].begin(), adjacentTriangles[GT2Edge[2]].end(), T2 ),
+            adjacentTriangles[GT2Edge[2]].end() );
+        adjacentTriangles[GT2Edge[2]].push_back(GT2);
+    }
+
+
+    //Si attiva solo se c'è da completare il segmento tra due punti medi
+    if(flag == 2)
+    {
+        // Creo il nuovo lato dai due punti medi
+        unsigned int lMP = triMeshData.cell1DIDs.size();
+        Vector2i MPVert = {MP1, MP2};
+        CreateEdge(lMP, MPVert, 0);
+
+
 
     }
 }
@@ -240,14 +268,15 @@ void Refine(TriangularMesh& mesh, const unsigned int N)
 void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& removed)
 {
     unsigned int flag = 0;
+    unsigned int mode = 0;
     unsigned int T1 = 0;
     unsigned int lT1 = 0;
     unsigned int T2 = 0;
     unsigned int lT2 = 0;
     unsigned int GT1 = 0;
     unsigned int GT2 = 0;
-    unsigned int MP = 0;
     unsigned int MP1 = 0;
+    unsigned int MP2 = 0;
 
     while(flag != 1)
     {
@@ -261,21 +290,18 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
         {
             T1=T2;
             lT1 = mesh.MaxEdge(T1);
-            cout << T1 << endl;
         }
 
         if (mesh.triMeshData.cell1DMks[lT1] == 5 || mesh.triMeshData.cell1DMks[lT1] == 6 ||
             mesh.triMeshData.cell1DMks[lT1] == 7 || mesh.triMeshData.cell1DMks[lT1] == 8)
         {
-            MP1=MP;
+            MP2=MP1;
 
-            mesh.Bisection(T1, GT1, lT1, T2, GT2, lT2, MP, 0);
+            mode = 0;
+            mesh.Bisection(T1, GT1, lT1, T2, GT2, MP1, MP2, flag, mode);
 
             removed.Add(T1, mesh);
             removed.Add(GT1, mesh);
-
-            //if (falg == 2)
-                //create(<PMlT>)
 
             flag=1;            
         }
@@ -292,38 +318,33 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
                     break;
                 }
             }
-            cout << T1 << endl;
-            cout << T2 << endl;
-            unsigned int lT2 = mesh.MaxEdge(T2);
+
+            lT2 = mesh.MaxEdge(T2);
             removed.Add(T2, mesh);
 
             if (lT1 == lT2)
             {
-                MP1=MP;
+                MP2=MP1;
 
-                mesh.Bisection(T1, GT1, lT1, T2, GT2, lT2, MP, 1);
+                mode = 1;
+                mesh.Bisection(T1, GT1, lT1, T2, GT2, MP1, MP2, flag, mode);
 
                 removed.Add(T1, mesh);
                 removed.Add(GT1, mesh);
                 removed.Add(T2, mesh);
                 removed.Add(GT2, mesh);
 
-                //if (falg == 2)
-                    //create(<PMlT>)
-
                 flag=1;
             }
             else
             {
-                MP1=MP;
+                MP2=MP1;
 
-                mesh.Bisection(T1, GT1, lT1, T2, GT2, lT2, MP, 0);
+                mode = 0;
+                mesh.Bisection(T1, GT1, lT1, T2, GT2, MP1, MP2, flag, mode);
 
                 removed.Add(T1, mesh);
                 removed.Add(GT1, mesh);
-
-                //if (falg == 2)
-                    //create(<PMlT>)
 
                 flag=2;
             }

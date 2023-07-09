@@ -40,6 +40,8 @@ class TriangularMesh
 
         vector<unsigned int> GetAdjacentTriangles(unsigned int edgeId);
 
+        void ShowAdjacentTriangles();
+
         void PrintToCSV(const string& filePath0, const string& filePath1, const string& filePath2);
 
         void CreatePoint(const unsigned int& cell0DID, const Vector2d& cell0DCoord, const unsigned int& cell0DMk);
@@ -58,9 +60,10 @@ class TriangularMesh
 
         Vector2d MidPoint(const unsigned int& cell1DID);
 
-        void Bisection(const unsigned int& cell2DID, unsigned int& newcell2DID, const unsigned int& cell1DID,
-                       const unsigned int& cell2DID2, unsigned int& newcell2DID2, const unsigned int& cell1DID2,
-                       unsigned int& midpoint, const unsigned int& mode);
+        void Bisection(const unsigned int& T1, unsigned int& GT1, const unsigned int& lT1,
+                       const unsigned int& T2, unsigned int& GT2,
+                       unsigned int& MP1, const unsigned int& MP2,
+                       const unsigned int& flag, const unsigned int& mode);
 
 };
 
