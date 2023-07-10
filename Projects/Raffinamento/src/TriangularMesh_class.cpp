@@ -152,7 +152,7 @@ void fillTriMeshStruct(TriMeshStruct &triMeshData, unordered_map<unsigned int, v
             throw runtime_error("Failed to extract data from file at path " + filePath2D + ": file is empty");
 
         unsigned int count = 1;
-        for (char c : fileLines[1])
+        for (char c : fileLines[0])
         {
             if (c == ' ')
             {
@@ -189,8 +189,6 @@ void fillTriMeshStruct(TriMeshStruct &triMeshData, unordered_map<unsigned int, v
                 triMeshData.cell2DVerts.push_back(verts);
                 triMeshData.cell2DEdges.push_back(edges);
                 triMeshData.cell2DMks.push_back(marker);
-
-
             }
             else if(count == 8)
             {

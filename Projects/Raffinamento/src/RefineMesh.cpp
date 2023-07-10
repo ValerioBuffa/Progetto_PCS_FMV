@@ -72,8 +72,10 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
     array<unsigned int, 3> T1EdgeOld = triMeshData.cell2DEdges[T1];
     array<unsigned int, 2> T1OtherEdge;
     int index = 0;
-    for (int i = 0; i < 3; i++) {
-        if (T1EdgeOld[i] != lT1) {
+    for (int i = 0; i < 3; i++)
+    {
+        if (T1EdgeOld[i] != lT1)
+        {
             T1OtherEdge[index] = T1EdgeOld[i];
             index++;
         }
@@ -168,8 +170,10 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
         array<unsigned int, 3> T2EdgeOld = triMeshData.cell2DEdges[T2];
         array<unsigned int, 2> T2OtherEdge;
         index = 0;
-        for (int i = 0; i < 3; i++) {
-            if (T2EdgeOld[i] != lT1) {
+        for (int i = 0; i < 3; i++)
+        {
+            if (T2EdgeOld[i] != lT1)
+            {
                 T2OtherEdge[index] = T2EdgeOld[i];
                 index++;
             }
