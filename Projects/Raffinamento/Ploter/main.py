@@ -344,9 +344,9 @@ def Vplot(cell0ds_in, cell1ds_in, cell2ds_in, cell0ds_out, cell1ds_out, cell2ds_
 
 
 
-file_IN_path0 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Test1\\Cell0Ds.csv"
-file_IN_path1 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Test1\\Cell1Ds.csv"
-file_IN_path2 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Test1\\Cell2Ds.csv"
+file_IN_path0 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Input\\Cell0Ds.csv"
+file_IN_path1 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Input\\Cell1Ds.csv"
+file_IN_path2 = "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Input\\Cell2Ds.csv"
 Cella0_IN = importCell0Ds(file_IN_path0)
 Cella1_IN = importCell1Ds(file_IN_path1)
 Cella2_IN = importCell2Ds(file_IN_path2)
