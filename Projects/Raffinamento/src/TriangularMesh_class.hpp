@@ -60,9 +60,9 @@ class TriangularMesh
 
         Vector2d MidPoint(const unsigned int& cell1DID);
 
-        void Bisection(const unsigned int& T1, unsigned int& GT1, const unsigned int& lT1,
-                       const unsigned int& T2, unsigned int& GT2,
-                       unsigned int& MP1, const unsigned int& MP2,
+        void Bisection(const unsigned int& T1, unsigned int& GT1, const unsigned int& lT1, unsigned int& dlT1,  Vector2i& lT1VertOld,
+                       const unsigned int& T2, unsigned int& GT2, unsigned int& GT3, const Vector2i exlT1VertOld,
+                       unsigned int& MP1, const unsigned int& MP2, const unsigned int& lT1Old, const unsigned int& dlT1Old,
                        const unsigned int& flag, const unsigned int& mode);
 
 };

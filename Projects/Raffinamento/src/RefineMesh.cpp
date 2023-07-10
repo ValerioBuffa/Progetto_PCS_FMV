@@ -27,9 +27,9 @@ bool TriangleInVector(const Triangle& triangle, const TriangleVector& removed)
 
 
 //Questa funzione divide a metà un lato di un triangolo aggiornando i dai della mesh
-void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const unsigned int& lT1,
-                               const unsigned int& T2, unsigned int& GT2,
-                               unsigned int& MP1, const unsigned int& MP2,
+void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const unsigned int& lT1, unsigned int& dlT1, Vector2i& lT1VertOld,
+                               const unsigned int& T2, unsigned int& GT2, unsigned int& GT3, const Vector2i exlT1VertOld,
+                               unsigned int& MP1, const unsigned int& MP2, const unsigned int& lT1Old, const unsigned int& dlT1Old,
                                const unsigned int& flag, const unsigned int& mode)
 {
     if (T1 >= triMeshData.cell2DIDs.size())
@@ -43,8 +43,9 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
     }
 
     // Salvo i dati dei vetrici del lato
-    Vector2i lT1VertOld = triMeshData.cell1DVerts[lT1];
+    lT1VertOld = triMeshData.cell1DVerts[lT1];
     unsigned int lT1Mk = triMeshData.cell1DMks[lT1];
+
 
     // Calcolo il punto medio
     Vector2d midPoint = MidPoint(lT1);
@@ -88,9 +89,9 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
     UpdateEdge(lT1, LT1Vert, lT1Mk);
 
     // Creo l'altro lato di input diviso con il punto medio
-    unsigned int dlT1 = triMeshData.cell1DIDs.size();
-    Vector2i dlT1newVert = {MP1, lT1VertOld[1]};
-    CreateEdge(dlT1, dlT1newVert, lT1Mk);
+    dlT1 = triMeshData.cell1DIDs.size();
+    Vector2i dlT1Vert = {MP1, lT1VertOld[1]};
+    CreateEdge(dlT1, dlT1Vert, lT1Mk);
 
     // Preparo gli elementi che servono per aggiornare la mesh per i lati e triangoli
     array<unsigned int, 3> T1Vert;
@@ -140,6 +141,7 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
     adjacentTriangles[GT1Edge[2]].push_back(GT1);
 
 
+
     //Si attiva questa modalità nel caso lT1==lT2
     if (mode == 1)
     {
@@ -184,7 +186,7 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
         array<unsigned int, 3> T2Edge;
         array<unsigned int, 3> GT2Edge;
 
-        if (triMeshData.cell1DVerts[lT1][0] == lT1VertOld[0] || triMeshData.cell1DVerts[lT1][1] == lT1VertOld[0])
+        if (triMeshData.cell1DVerts[lT1][0] == lT1VertOld[1] || triMeshData.cell1DVerts[lT1][1] == lT1VertOld[1])
         {
             T2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[0])};
             GT2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[1])};
@@ -195,7 +197,7 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
             GT2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[0])};
         }
 
-        if (triMeshData.cell1DVerts[T2OtherEdge[0]][0] == lT1VertOld[0] || triMeshData.cell1DVerts[T2OtherEdge[0]][1] == lT1VertOld[0])
+        if (triMeshData.cell1DVerts[T2OtherEdge[0]][0] == lT1VertOld[1] || triMeshData.cell1DVerts[T2OtherEdge[0]][1] == lT1VertOld[1])
         {
             T2Edge = {lMP2, lT1, T2OtherEdge[0]};
             GT2Edge = {lMP2, dlT1, T2OtherEdge[1]};
@@ -227,6 +229,7 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
     }
 
 
+
     //Si attiva solo se c'è da completare il segmento tra due punti medi
     if(flag == 2)
     {
@@ -235,8 +238,105 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
         Vector2i MPVert = {MP1, MP2};
         CreateEdge(lMP, MPVert, 0);
 
+        //Cerco quale triangolo verrà diviso tra T1 e GT1
+        unsigned int NT = 0;
+        bool found = false;
+        for (unsigned int i = 0; i < 3; ++i)
+        {
+            if (triMeshData.cell2DEdges[T1][i] == lT1Old)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (found)
+            NT = T1;
+        else
+            NT = GT1;
+
+        // Cerco gli id dei lati più corti del secondo triangolo
+        array<unsigned int, 3> NTEdgeOld = triMeshData.cell2DEdges[NT];
+        array<unsigned int, 2> NTOtherEdge;
+        index = 0;
+        for (int i = 0; i < 3; i++) {
+            if (NTEdgeOld[i] != lT1) {
+                NTOtherEdge[index] = NTEdgeOld[i];
+                index++;
+            }
+        }
+
+        array<unsigned int, 3> NTVert;
+        array<unsigned int, 3> GT3Vert;
+        array<unsigned int, 3> NTEdge;
+        array<unsigned int, 3> GT3Edge;
 
 
+        if (triMeshData.cell1DVerts[lT1][0] == exlT1VertOld[0] || triMeshData.cell1DVerts[lT1][1] == exlT1VertOld[0])
+        {
+            NTVert = {MP1, MP2, static_cast<unsigned int>(exlT1VertOld[0])};
+            GT3Vert = {MP1, MP2, PlT1opp};
+        }
+        else
+        {
+            NTVert = {MP1, MP2, static_cast<unsigned int>(exlT1VertOld[1])};
+            GT3Vert = {MP1, MP2, PlT1opp};
+        }
+
+        if(found)
+        {
+            if (triMeshData.cell1DVerts[NTOtherEdge[0]][0] == exlT1VertOld[0] || triMeshData.cell1DVerts[NTOtherEdge[0]][1] == exlT1VertOld[0])
+            {
+                NTEdge = {lMP, lT1, NTOtherEdge[0]};
+                GT3Edge = {lMP, dlT1Old, NTOtherEdge[1]};
+            }
+            else
+            {
+                NTEdge = {lMP, lT1, NTOtherEdge[1]};
+                GT3Edge = {lMP, dlT1Old, NTOtherEdge[0]};
+            }
+        }
+        else
+        {
+            if (triMeshData.cell1DVerts[NTOtherEdge[0]][0] == lT1VertOld[0] || triMeshData.cell1DVerts[NTOtherEdge[0]][1] == lT1VertOld[0])
+            {
+                NTEdge = {lMP, dlT1Old, NTOtherEdge[0]};
+                GT3Edge = {lMP, lT1Old, NTOtherEdge[1]};
+            }
+            else
+            {
+                NTEdge = {lMP, dlT1Old, NTOtherEdge[1]};
+                GT3Edge = {lMP, lT1Old, NTOtherEdge[0]};
+            }
+        }
+
+        // Aggiorno il triangolo diviso dal lato
+        unsigned int NTMk0 = triMeshData.cell2DMks[NT];
+        UpdateTriangle(NT, NTVert, NTEdge, NTMk0);
+
+        // Creo l'altra metà del triangolo
+        GT3 = triMeshData.cell2DIDs.size();
+        CreateTriangle(GT3, GT3Vert, GT3Edge, NTMk0);
+
+        adjacentTriangles[lMP].push_back(NT);
+        adjacentTriangles[lMP].push_back(GT3);
+        adjacentTriangles[GT3Edge[2]].erase(
+            remove( adjacentTriangles[GT3Edge[2]].begin(), adjacentTriangles[GT3Edge[2]].end(), NT ),
+            adjacentTriangles[GT3Edge[2]].end() );
+        adjacentTriangles[GT3Edge[2]].push_back(GT3);
+
+        if(found)
+        {
+            adjacentTriangles[GT3Edge[1]].push_back(GT3);
+        }
+        else
+        {
+            adjacentTriangles[NTEdge[1]].push_back(NT);
+            adjacentTriangles[GT3Edge[1]].erase(
+                remove( adjacentTriangles[GT3Edge[1]].begin(), adjacentTriangles[GT3Edge[1]].end(), NT ),
+                adjacentTriangles[GT3Edge[1]].end() );
+            adjacentTriangles[GT3Edge[1]].push_back(GT3);
+        }
     }
 }
 
@@ -271,10 +371,16 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
     unsigned int mode = 0;
     unsigned int T1 = 0;
     unsigned int lT1 = 0;
+    Vector2i lT1VertOld = {0, 0};
+    unsigned int dlT1 = 0;
+    Vector2i exlT1VertOld = {0, 0};
+    unsigned int lT1Old = 0;
+    unsigned int dlT1Old = 0;
     unsigned int T2 = 0;
     unsigned int lT2 = 0;
     unsigned int GT1 = 0;
     unsigned int GT2 = 0;
+    unsigned int GT3 = 0;
     unsigned int MP1 = 0;
     unsigned int MP2 = 0;
 
@@ -287,21 +393,29 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
         }
 
         if(flag == 2)
-        {
+        {            
+            MP2=MP1;
+
+            lT1Old=lT1;
+            exlT1VertOld = lT1VertOld;
+
+            dlT1Old=dlT1;
+
             T1=T2;
             lT1 = mesh.MaxEdge(T1);
         }
 
         if (mesh.triMeshData.cell1DMks[lT1] == 5 || mesh.triMeshData.cell1DMks[lT1] == 6 ||
             mesh.triMeshData.cell1DMks[lT1] == 7 || mesh.triMeshData.cell1DMks[lT1] == 8)
-        {
-            MP2=MP1;
-
+        {            
             mode = 0;
-            mesh.Bisection(T1, GT1, lT1, T2, GT2, MP1, MP2, flag, mode);
+            mesh.Bisection(T1, GT1, lT1, dlT1, lT1VertOld, T2, GT2, GT3, exlT1VertOld, MP1, MP2, lT1Old, dlT1Old, flag, mode);
 
             removed.Add(T1, mesh);
             removed.Add(GT1, mesh);
+
+            if(flag == 2)
+                removed.Add(GT3, mesh);
 
             flag=1;            
         }
@@ -324,27 +438,29 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
 
             if (lT1 == lT2)
             {
-                MP2=MP1;
-
                 mode = 1;
-                mesh.Bisection(T1, GT1, lT1, T2, GT2, MP1, MP2, flag, mode);
+                mesh.Bisection(T1, GT1, lT1, dlT1, lT1VertOld, T2, GT2, GT3, exlT1VertOld, MP1, MP2, lT1Old, dlT1Old, flag, mode);
 
                 removed.Add(T1, mesh);
                 removed.Add(GT1, mesh);
                 removed.Add(T2, mesh);
                 removed.Add(GT2, mesh);
 
+                if(flag == 2)
+                    removed.Add(GT3, mesh);
+
                 flag=1;
             }
             else
             {
-                MP2=MP1;
-
                 mode = 0;
-                mesh.Bisection(T1, GT1, lT1, T2, GT2, MP1, MP2, flag, mode);
+                mesh.Bisection(T1, GT1, lT1, dlT1, lT1VertOld, T2, GT2, GT3, exlT1VertOld, MP1, MP2, lT1Old, dlT1Old, flag, mode);
 
                 removed.Add(T1, mesh);
                 removed.Add(GT1, mesh);
+
+                if(flag == 2)
+                    removed.Add(GT3, mesh);
 
                 flag=2;
             }
