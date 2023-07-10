@@ -25,4 +25,31 @@ TEST(RefineMeshTest, ToRefineTest)
     EXPECT_EQ(result1, expected1);
 }
 
+TEST(RefineMeshTest, RefineCase1Test)
+{
+    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1\\Input\\Cell0Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1\\Input\\Cell1Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1\\Input\\Cell2Ds.csv");
+
+    TriangularMesh expectedmesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1\\Output\\Cell0Ds.csv",
+                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1\\Output\\Cell1Ds.csv",
+                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1\\Output\\Cell2Ds.csv");
+
+    int N = ToRefine(mesh, 1);
+    Refine(mesh, N);
+
+    EXPECT_EQ(mesh.triMeshData, expectedmesh.triMeshData);
+    for (size_t i = 0; i < mesh.triMeshData.cell2DIDs.size(); ++i)
+    {
+        unsigned int ID = mesh.triMeshData.cell2DIDs[i];
+
+        // Ottieni le mappe adjacentTriangles per gli ID correnti
+        const auto& adjTriangles1 = mesh.GetAdjacentTriangles(ID);
+        const auto& adjTriangles2 = expectedmesh.GetAdjacentTriangles(ID);
+
+        // Confronta le mappe adjacentTriangles
+        EXPECT_EQ(adjTriangles1, adjTriangles2);
+    }
+}
+
 #endif // test_RefineMesh_H
