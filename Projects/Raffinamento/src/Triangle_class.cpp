@@ -19,6 +19,7 @@ bool operator != (const TriStruct &obj1, const TriStruct &obj2)
 }
 
 
+//L'operatore di confronto == viene utilizzato per confrontare due istanze della classe Triangle
 bool operator == (const Triangle &obj1, const Triangle &obj2)
 {
     return obj1.triData ==obj2.triData;

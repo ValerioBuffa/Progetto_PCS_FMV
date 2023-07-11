@@ -266,6 +266,7 @@ vector<unsigned int> TriangularMesh::GetAdjacentTriangles(unsigned int edgeId)
 }
 
 
+//Questa funzione stampa la mappa di adiacenza dei triangoli
 void TriangularMesh::ShowAdjacentTriangles()
 {
     for (const auto& entry : adjacentTriangles)

@@ -65,17 +65,21 @@ bool operator == (TriangleVector obj1, TriangleVector obj2)
 }
 
 
+// Restituisce un puntatore al primo elemento del vettore triangles
 const Triangle* TriangleVector::begin() const
 {
     return &triangles[0];
 }
 
+
+// Restituisce un puntatore all'elemento successivo all'ultimo elemento del vettore triangles
 const Triangle* TriangleVector::end() const
 {
     return &triangles[0] + triangles.size();
 }
 
 
+//Aggiunge un nuovo triangolo al vettore triangles utilizzando triID e triMeshData
 void TriangleVector::Add(unsigned int triID, TriangularMesh& triMesh)
 {
     TriStruct triData(triID, triMesh.triMeshData);

@@ -4,6 +4,7 @@ namespace ProjectLibrary
 {
 
 
+
 //Questa funzione ci dice quanti triangoli bisogna raffinare in base al numero totale di triangoli e un parametro che ha valori tra 0 e 1
 int ToRefine(TriangularMesh& mesh, const double n)
 {
@@ -101,26 +102,46 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
     array<unsigned int, 3> T1Edge;
     array<unsigned int, 3> GT1Edge;
 
-    if (triMeshData.cell1DVerts[lT1][0] == lT1VertOld[0] || triMeshData.cell1DVerts[lT1][1] == lT1VertOld[0])
-    {
-        T1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[0])};
-        GT1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[1])};
-    }
-    else
-    {
-        T1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[1])};
-        GT1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[0])};
-    }
+    T1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[0])};
+    GT1Vert = {MP1, PlT1opp, static_cast<unsigned int>(lT1VertOld[1])};
 
-    if (triMeshData.cell1DVerts[T1OtherEdge[0]][0] == lT1VertOld[0] || triMeshData.cell1DVerts[T1OtherEdge[0]][1] == lT1VertOld[0])
+
+    T1Edge = {lMP1, lT1, 0};
+    GT1Edge = {lMP1, dlT1, 0};
+
+    for (int i = 0; i < 2; i++)
     {
-        T1Edge = {lMP1, lT1, T1OtherEdge[0]};
-        GT1Edge = {lMP1, dlT1, T1OtherEdge[1]};
-    }
-    else
-    {
-        T1Edge = {lMP1, lT1, T1OtherEdge[1]};
-        GT1Edge = {lMP1, dlT1, T1OtherEdge[0]};
+        unsigned int counter = 0;
+        for(int j = 0; j < 3; j++)
+        {
+            if(flag != 2)
+            {
+                if(static_cast<unsigned int>(triMeshData.cell1DVerts[T1OtherEdge[i]][0]) == T1Vert[j] ||
+                   static_cast<unsigned int>(triMeshData.cell1DVerts[T1OtherEdge[i]][1]) == T1Vert[j] )
+                {
+                    counter++;
+                }
+            }
+            else
+            {
+                if(static_cast<unsigned int>(triMeshData.cell1DVerts[T1OtherEdge[i]][0]) == T1Vert[j] ||
+                   static_cast<unsigned int>(triMeshData.cell1DVerts[T1OtherEdge[i]][1]) == T1Vert[j] ||
+                   static_cast<unsigned int>(triMeshData.cell1DVerts[lT1Old][0]) == T1Vert[j] ||
+                   static_cast<unsigned int>(triMeshData.cell1DVerts[dlT1Old][0]) == T1Vert[j] ||
+                   static_cast<unsigned int>(triMeshData.cell1DVerts[lT1Old][1]) == T1Vert[j] ||
+                   static_cast<unsigned int>(triMeshData.cell1DVerts[dlT1Old][1]) == T1Vert[j])
+                {
+                    counter++;
+                }
+            }
+            if(counter == 2)
+            {
+                T1Edge[2]=T1OtherEdge[i];
+                GT1Edge[2]=T1OtherEdge[1-i];
+                break;
+            }
+        }
+
     }
 
     // Aggiorno il triangolo diviso dal lato
@@ -130,9 +151,9 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
 
     // Creo l'altra metà del triangolo
     GT1 = triMeshData.cell2DIDs.size();
-    unsigned int GT1Mk = T1Mk0 + 1;
-    CreateTriangle(GT1, GT1Vert, GT1Edge, GT1Mk);
+    CreateTriangle(GT1, GT1Vert, GT1Edge, T1Mk);
 
+    //Aggiorno l'adiacenza
     adjacentTriangles[lMP1].push_back(T1);
     adjacentTriangles[lMP1].push_back(GT1);
     adjacentTriangles[dlT1].push_back(GT1);
@@ -190,26 +211,29 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
         array<unsigned int, 3> T2Edge;
         array<unsigned int, 3> GT2Edge;
 
-        if (triMeshData.cell1DVerts[lT1][0] == lT1VertOld[1] || triMeshData.cell1DVerts[lT1][1] == lT1VertOld[1])
-        {
-            T2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[0])};
-            GT2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[1])};
-        }
-        else
-        {
-            T2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[1])};
-            GT2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[0])};
-        }
+        T2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[0])};
+        GT2Vert = {MP1, PlT2opp, static_cast<unsigned int>(lT1VertOld[1])};
 
-        if (triMeshData.cell1DVerts[T2OtherEdge[0]][0] == lT1VertOld[1] || triMeshData.cell1DVerts[T2OtherEdge[0]][1] == lT1VertOld[1])
+        T2Edge = {lMP2, lT1, 0};
+        GT2Edge = {lMP2, dlT1, 0};
+
+        for (int i = 0; i < 2; i++)
         {
-            T2Edge = {lMP2, lT1, T2OtherEdge[0]};
-            GT2Edge = {lMP2, dlT1, T2OtherEdge[1]};
-        }
-        else
-        {
-            T2Edge = {lMP2, lT1, T2OtherEdge[1]};
-            GT2Edge = {lMP2, dlT1, T2OtherEdge[0]};
+            unsigned int counter = 0;
+            for(int j = 0; j < 3; j++)
+            {
+                if(static_cast<unsigned int>(triMeshData.cell1DVerts[T2OtherEdge[i]][0]) == T2Vert[j] ||
+                   static_cast<unsigned int>(triMeshData.cell1DVerts[T2OtherEdge[i]][1]) == T2Vert[j] )
+                {
+                    counter++;
+                }
+            }
+            if(counter == 2)
+            {
+                T2Edge[2]=T2OtherEdge[i];
+                GT2Edge[2]=T2OtherEdge[1-i];
+                break;
+            }
         }
 
         // Aggiorno il triangolo diviso dal lato
@@ -222,6 +246,7 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
         unsigned int GT2Mk = T2Mk0 + 1;
         CreateTriangle(GT2, GT2Vert, GT2Edge, GT2Mk);
 
+        //Aggiorno l'adiacenza
         adjacentTriangles[lMP2].push_back(T2);
         adjacentTriangles[lMP2].push_back(GT2);
         adjacentTriangles[dlT1].push_back(GT2);
@@ -263,8 +288,10 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
         array<unsigned int, 3> NTEdgeOld = triMeshData.cell2DEdges[NT];
         array<unsigned int, 2> NTOtherEdge;
         index = 0;
-        for (int i = 0; i < 3; i++) {
-            if (NTEdgeOld[i] != lT1) {
+        for (int i = 0; i < 3; i++)
+        {
+            if (NTEdgeOld[i] != lT1)
+            {
                 NTOtherEdge[index] = NTEdgeOld[i];
                 index++;
             }
@@ -288,29 +315,51 @@ void TriangularMesh::Bisection(const unsigned int& T1, unsigned int& GT1, const 
         }
 
         if(found)
-        {
-            if (triMeshData.cell1DVerts[NTOtherEdge[0]][0] == exlT1VertOld[0] || triMeshData.cell1DVerts[NTOtherEdge[0]][1] == exlT1VertOld[0])
+        {            
+            NTEdge = {lMP, lT1, 0};
+            GT3Edge = {lMP, dlT1Old, 0};
+
+            for (int i = 0; i < 2; i++)
             {
-                NTEdge = {lMP, lT1, NTOtherEdge[0]};
-                GT3Edge = {lMP, dlT1Old, NTOtherEdge[1]};
-            }
-            else
-            {
-                NTEdge = {lMP, lT1, NTOtherEdge[1]};
-                GT3Edge = {lMP, dlT1Old, NTOtherEdge[0]};
+                unsigned int counter = 0;
+                for(int j = 0; j < 3; j++)
+                {
+                    if(static_cast<unsigned int>(triMeshData.cell1DVerts[NTOtherEdge[i]][0]) == NTVert[j] ||
+                       static_cast<unsigned int>(triMeshData.cell1DVerts[NTOtherEdge[i]][1]) == NTVert[j] )
+                    {
+                        counter++;
+                    }
+                }
+                if(counter == 2)
+                {
+                    NTEdge[2]=NTOtherEdge[i];
+                    GT3Edge[2]=NTOtherEdge[1-i];
+                    break;
+                }
             }
         }
         else
         {
-            if (triMeshData.cell1DVerts[NTOtherEdge[0]][0] == lT1VertOld[0] || triMeshData.cell1DVerts[NTOtherEdge[0]][1] == lT1VertOld[0])
+            NTEdge = {lMP, dlT1Old, 0};
+            GT3Edge = {lMP, lT1, 0};
+
+            for (int i = 0; i < 2; i++)
             {
-                NTEdge = {lMP, dlT1Old, NTOtherEdge[0]};
-                GT3Edge = {lMP, lT1Old, NTOtherEdge[1]};
-            }
-            else
-            {
-                NTEdge = {lMP, dlT1Old, NTOtherEdge[1]};
-                GT3Edge = {lMP, lT1Old, NTOtherEdge[0]};
+                unsigned int counter = 0;
+                for(int j = 0; j < 3; j++)
+                {
+                    if(static_cast<unsigned int>(triMeshData.cell1DVerts[NTOtherEdge[i]][0]) == NTVert[j] ||
+                       static_cast<unsigned int>(triMeshData.cell1DVerts[NTOtherEdge[i]][1]) == NTVert[j] )
+                    {
+                        counter++;
+                    }
+                }
+                if(counter == 2)
+                {
+                    NTEdge[2]=NTOtherEdge[i];
+                    GT3Edge[2]=NTOtherEdge[1-i];
+                    break;
+                }
             }
         }
 
