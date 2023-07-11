@@ -42,10 +42,10 @@ def importCell0Ds(file_path):
             Cella.append(dati)                    # Aggiungi l'oggetto Cell0Ds alla lista "Cella"
         return Cella                              # Restituisci la lista "Cella" contenente tutti gli oggetti Cell0Ds
     except FileNotFoundError:                     # Se viene sollevata un'eccezione di tipo FileNotFoundError
-        print("File non trovato.")
+        print(f"File '{file_path}' trovato.")
         return None                               # Restituisci None per segnalare un fallimento nell'importazione dei dati
     except Exception as e:                        # Se viene sollevata un'eccezione generica
-        print(f"Si è verificato un errore durante l'importazione dei dati: {e}")
+        print(f"Si è verificato un errore durante l'importazione dei dati in 0D: {e}")
         return None                               # Restituisci None per segnalare un fallimento nell'importazione dei dati
 
 
@@ -62,10 +62,10 @@ def importCell1Ds(file_path):
             Cella.append(dati)                    # Aggiungi l'oggetto Cell1Ds alla lista "Cella"
         return Cella                              # Restituisci la lista "Cella" contenente tutti gli oggetti Cell1Ds
     except FileNotFoundError:                     # Se viene sollevata un'eccezione di tipo FileNotFoundError
-        print("File non trovato.")
+        print(f"File '{file_path}' trovato.")
         return None                               # Restituisci None per segnalare un fallimento nell'importazione dei dati
     except Exception as e:                        # Se viene sollevata un'eccezione generica
-        print(f"Si è verificato un errore durante l'importazione dei dati: {e}")
+        print(f"Si è verificato un errore durante l'importazione dei dati in 1D: {e}")
         return None                               # Restituisci None per segnalare un fallimento nell'importazione dei dati
 
 
@@ -113,9 +113,9 @@ def importCell2Ds(file_path):
             Cella.append(dati)
         return Cella
     except FileNotFoundError:
-        print(f"File '{file_path}' not found")
+        print(f"File '{file_path}' trovato.")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Si è verificato un errore durante l'importazione dei dati in 2D: {e}")
 
 
 def showCell0Ds(cells):
