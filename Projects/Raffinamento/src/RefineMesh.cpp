@@ -443,6 +443,7 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
         {
             T1 = triangle.triData.triID;
             lT1 = mesh.MaxEdge(T1);
+            removed.Add(T1, mesh);
         }
 
         if(flag == 2)
@@ -458,17 +459,10 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
             lT1 = mesh.MaxEdge(T1);
         }
 
-        if (mesh.triMeshData.cell1DMks[lT1] == 5 || mesh.triMeshData.cell1DMks[lT1] == 6 ||
-            mesh.triMeshData.cell1DMks[lT1] == 7 || mesh.triMeshData.cell1DMks[lT1] == 8)
+        if (mesh.triMeshData.cell1DMks[lT1] != 0)
         {            
             mode = 0;
             mesh.Bisection(T1, GT1, lT1, dlT1, lT1VertOld, T2, GT2, GT3, exlT1VertOld, MP1, MP2, lT1Old, dlT1Old, flag, mode);
-
-            removed.Add(T1, mesh);
-            removed.Add(GT1, mesh);
-
-            if(flag == 2)
-                removed.Add(GT3, mesh);
 
             flag=1;            
         }
@@ -494,26 +488,12 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
                 mode = 1;
                 mesh.Bisection(T1, GT1, lT1, dlT1, lT1VertOld, T2, GT2, GT3, exlT1VertOld, MP1, MP2, lT1Old, dlT1Old, flag, mode);
 
-                removed.Add(T1, mesh);
-                removed.Add(GT1, mesh);
-                removed.Add(T2, mesh);
-                removed.Add(GT2, mesh);
-
-                if(flag == 2)
-                    removed.Add(GT3, mesh);
-
                 flag=1;
             }
             else
             {
                 mode = 0;
                 mesh.Bisection(T1, GT1, lT1, dlT1, lT1VertOld, T2, GT2, GT3, exlT1VertOld, MP1, MP2, lT1Old, dlT1Old, flag, mode);
-
-                removed.Add(T1, mesh);
-                removed.Add(GT1, mesh);
-
-                if(flag == 2)
-                    removed.Add(GT3, mesh);
 
                 flag=2;
             }
