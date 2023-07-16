@@ -79,15 +79,15 @@ TEST(RefineMeshTest, RefineCase2Test)
     }
 }
 
-TEST(RefineMeshTest, RefineCase1_1Test)
+TEST(RefineMeshTest, RefineCase3_1Test)
 {
-    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_1\\Input\\Cell0Ds.csv",
-                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_1\\Input\\Cell1Ds.csv",
-                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_1\\Input\\Cell2Ds.csv");
+    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_1\\Input\\Cell0Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_1\\Input\\Cell1Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_1\\Input\\Cell2Ds.csv");
 
-    TriangularMesh expectedmesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_1\\Output\\Cell0Ds.csv",
-                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_1\\Output\\Cell1Ds.csv",
-                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_1\\Output\\Cell2Ds.csv");
+    TriangularMesh expectedmesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_1\\Output\\Cell0Ds.csv",
+                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_1\\Output\\Cell1Ds.csv",
+                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_1\\Output\\Cell2Ds.csv");
 
     int N = ToRefine(mesh, 0.5);
     Refine(mesh, N);
@@ -106,15 +106,15 @@ TEST(RefineMeshTest, RefineCase1_1Test)
     }
 }
 
-TEST(RefineMeshTest, RefineCase1_2Test)
+TEST(RefineMeshTest, RefineCase3_2Test)
 {
-    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_2\\Input\\Cell0Ds.csv",
-                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_2\\Input\\Cell1Ds.csv",
-                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_2\\Input\\Cell2Ds.csv");
+    TriangularMesh mesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_2\\Input\\Cell0Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_2\\Input\\Cell1Ds.csv",
+                        "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_2\\Input\\Cell2Ds.csv");
 
-    TriangularMesh expectedmesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_2\\Output\\Cell0Ds.csv",
-                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_2\\Output\\Cell1Ds.csv",
-                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case1_2\\Output\\Cell2Ds.csv");
+    TriangularMesh expectedmesh("D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_2\\Output\\Cell0Ds.csv",
+                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_2\\Output\\Cell1Ds.csv",
+                                "D:\\PoliTo\\Matematica\\3-Anno\\Programmazione_e_calcolo_scientifico\\Progetto\\Progetto_PCS_FMV\\Projects\\Raffinamento\\Dataset\\Case3_2\\Output\\Cell2Ds.csv");
 
     int N = ToRefine(mesh, 0.5);
     Refine(mesh, N);
