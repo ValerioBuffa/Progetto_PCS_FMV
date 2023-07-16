@@ -106,7 +106,6 @@ TriangleVector SelecTriangles(const TriangleVector& triangles, const unsigned in
 }
 
 
-//Funzione per "sistemare" un sottoalbero all'interno di un vettore.
 //La funzione scambia i nodi in modo da mantenere la proprietà dell'heap.
 void heapify(TriangleVector& triangles, int size, int root)
 {
