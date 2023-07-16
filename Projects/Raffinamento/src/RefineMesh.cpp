@@ -457,6 +457,7 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
 
             T1=T2;
             lT1 = mesh.MaxEdge(T1);
+            removed.Add(T1, mesh);
         }
 
         if (mesh.triMeshData.cell1DMks[lT1] != 0)
@@ -467,8 +468,7 @@ void SemiRefineMesh(TriangularMesh& mesh, Triangle& triangle, TriangleVector& re
             flag=1;            
         }
         else
-        {
-            removed.Add(T1, mesh);
+        {            
             vector<unsigned int> adjacentTriangles = mesh.GetAdjacentTriangles(lT1);
 
             for (unsigned int i = 0; i < adjacentTriangles.size(); i++)
